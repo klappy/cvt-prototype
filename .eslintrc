@@ -1,0 +1,24 @@
+{
+  "extends": ["eslint:recommended"],
+  "plugins": [
+    "jest"
+  ],
+  "settings": {
+  },
+  "rules": {
+    "no-undef": "warn",
+    "semi": ["error", "always", {"omitLastInOneLineBlock": true}],
+    "no-console": "off"
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+        "modules": true
+    }
+  },
+  "env": {
+    "node": true,
+    "es6": true,
+    "jest/globals": true
+  }
+}
