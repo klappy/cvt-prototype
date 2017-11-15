@@ -4,6 +4,22 @@ import fs from 'fs-extra';
 const auth = fs.readJSONSync('auth.json');
 const poloniex = new Exchanges.poloniex(auth);
 
+export const getBuyPrice = (targetValue, assetBalance, percentage) => {
+  const targetPrice = getTargetPrice(targetValue, assetBalance);
+  const targetBuyPrice = targetPrice - (targetPrice * percentage);
+  return targetBuyPrice;
+};
+
+export const getSellPrice = (targetValue, assetBalance, percentage) => {
+  const targetPrice = getTargetPrice(targetValue, assetBalance);
+  const targetSellPrice = targetPrice + (targetPrice * percentage);
+  return targetSellPrice;
+};
+
+export const getTargetPrice = (targetValue, assetBalance) => {
+  return targetValue/assetBalance;
+};
+
 export const getAssetValues = (asset, currency) => {
   return new Promise(resolve => {
     getBalance(asset)

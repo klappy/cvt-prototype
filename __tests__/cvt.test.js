@@ -1,15 +1,45 @@
 // import cvt from '../src/cvt/ticker.js';
 import * as cvt from '../cvt/index';
 
-
 const asset = 'XMR';
 const currency = 'BTC';
 
+describe('getBuyPrice', () => {
+  it('should return a number', function() {
+    const targetValue = 10;
+    const assetBalance = 5;
+    const percentage = 0.01;
+    const buyPrice = cvt.getBuyPrice(targetValue, assetBalance, percentage);
+    const expected = 1.98;
+    expect(buyPrice).toEqual(expected);
+  });
+});
+
+describe('getSellPrice', () => {
+  it('should return a number', function() {
+    const targetValue = 10;
+    const assetBalance = 5;
+    const percentage = 0.01;
+    const sellPrice = cvt.getSellPrice(targetValue, assetBalance, percentage);
+    const expected = 2.02;
+    expect(sellPrice).toEqual(expected);
+  });
+});
+
+describe('getTargetPrice', () => {
+  it('should return a number', function() {
+    const targetValue = 10;
+    const assetBalance = 5;
+    const targetPrice = cvt.getTargetPrice(targetValue, assetBalance);
+    const expected = 2;
+    expect(targetPrice).toEqual(expected);
+  });
+});
+
 describe('getTicker', () => {
-  it('should return object with expected keys', function (done) {
+  it('should return object with expected keys', function(done) {
     cvt.getTicker(asset, currency)
     .then(ticker => {
-      console.log(ticker);
       const expected = ['last', 'ask', 'bid', 'high', 'low', 'volume', 'timestamp'];
       expect(Object.keys(ticker)).toEqual(expected);
       done();
@@ -18,10 +48,9 @@ describe('getTicker', () => {
 });
 
 describe('getBalance', () => {
-  it('should return object with expected keys', function (done) {
+  it('should return object with expected keys', function(done) {
     cvt.getBalance(asset)
     .then(balance => {
-      console.log(balance);
       const expected = ['balance', 'available', 'pending'];
       expect(Object.keys(balance)).toEqual(expected);
       done();
@@ -30,10 +59,9 @@ describe('getBalance', () => {
 });
 
 describe('getAssetValues', () => {
-  it('should return object with expected keys', function (done) {
+  it('should return object with expected keys', function(done) {
     cvt.getAssetValues(asset, currency)
     .then(ticker => {
-      console.log(ticker);
       const expected = ['last', 'ask', 'bid', 'high', 'low'];
       expect(Object.keys(ticker)).toEqual(expected);
       done();
