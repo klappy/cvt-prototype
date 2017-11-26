@@ -1,18 +1,17 @@
 // import cvt from '../src/cvt/ticker.js';
-import Exchanges from 'crypto-exchange';
+import plnx from 'plnx';
 import fs from 'fs-extra';
 
 const auth = fs.readJSONSync('auth.json');
-const poloniex = new Exchanges.poloniex(auth);
 
 const asset = 'XMR';
-const pair = asset + '_BTC';
+const pair = 'BTC_' + asset;
 
 describe('ticker', () => {
   it('should return object with expected keys', function (done) {
-    poloniex.ticker(pair).then(result => {
-      console.log(result);
-      const expected = ['last', 'ask', 'bid', 'high', 'low', 'volume', 'timestamp'];
+    plnx.returnTicker(auth).then(result => {
+      console.log(result[pair]);
+      const expected = ['id', 'last', 'lowestAsk', 'highestBid', 'percentChange', 'baseVolume', 'quoteVolume', 'isFrozen', 'high24hr', 'low24hr'];
       expect(Object.keys(result[pair])).toEqual(expected);
       done();
     });
@@ -21,11 +20,10 @@ describe('ticker', () => {
 
 describe('balances', () => {
   it('should return object with expected keys', function (done) {
-    poloniex.balances().then(result => {
+    plnx.returnBalances(auth).then(result => {
       const balance = result[asset];
       console.log(balance);
-      const expected = ['balance', 'available', 'pending'];
-      expect(Object.keys(balance)).toEqual(expected);
+      expect(parseInt(balance)).toBeGreaterThanOrEqual(0);
       done();
     });
   });

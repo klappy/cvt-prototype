@@ -7,7 +7,7 @@ const Assets = ({
 }) => {
   const _assets = assets.map((asset) => {
     return (
-      <Asset key={asset} asset={asset} />
+      <Asset key={asset.name} asset={asset} />
     );
   });
 

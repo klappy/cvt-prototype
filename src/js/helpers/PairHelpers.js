@@ -1,6 +1,6 @@
 
 export const getPair = (asset, currency) => {
-  return asset + '_' + currency;
+  return currency + '_' + asset;
 };
 
 export const getBuyPrice = (targetValue, assetBalance, percent) => {

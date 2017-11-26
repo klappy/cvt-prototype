@@ -6,7 +6,7 @@ const Asset = ({
 }) => {
   return (
     <div style={{}}>
-      {asset.name}
+      name: {asset.name}, balance: {asset.balance}, value: {asset.value}
     </div>
   );
 };

@@ -3,20 +3,12 @@
     "XMR_BTC": {
       "currency": {
         "code": "BTC",
-        "balance": {
-          "balance": 0.01876187,
-          "available": 0.01876187,
-          "pending": 0
-        },
+        "balance": 0.01876187,
         "usd": 7000
       },
       "asset": {
         "code": "XMR",
-        "balance": {
-          "balance": 0.60466041,
-          "available": 0.60466041,
-          "pending": 0
-        },
+        "balance": 0.60466041,
         "value": 0.01001347267
       },
       "config": {

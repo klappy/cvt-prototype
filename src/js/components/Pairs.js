@@ -1,25 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Pair from './Pair';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow
+} from 'material-ui/Table';
 
 const Pairs = ({
-  pairs
+  portfolio
 }) => {
-  const _pairs = pairs.map((pair) => {
-    return (
-      <Pair key={pair} pair={pair} />
+  const pairs = [];
+  Object.keys(portfolio).forEach((pairCode, index) => {
+    const pair = portfolio[pairCode];
+    pairs.push(
+      <Pair key={index} pair={pair} />
     );
   });
 
   return (
-    <div style={{}}>
-      {_pairs}
-    </div>
+    <Table>
+        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+          <TableRow displayRowCheckBox={false}>
+            <TableHeaderColumn>Asset</TableHeaderColumn>
+            <TableHeaderColumn>Balance</TableHeaderColumn>
+            <TableHeaderColumn>24hr Change</TableHeaderColumn>
+            <TableHeaderColumn>BTC Value</TableHeaderColumn>
+            <TableHeaderColumn>Buy/Sell/Hold</TableHeaderColumn>
+          </TableRow>
+        </TableHeader>
+        <TableBody displayRowCheckbox={false} showRowHover={true}>
+          {pairs}
+        </TableBody>
+      </Table>
   );
 };
 
 Pairs.propTypes = {
-  pairs: PropTypes.array.isRequired
+  portfolio: PropTypes.object.isRequired
 };
 
 export default Pairs;
