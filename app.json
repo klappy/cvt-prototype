@@ -2,7 +2,7 @@
   "name": "cvt-prototype",
   "description": "Constant Value Target Trading",
   "scripts": {
-    "postdeploy": "npm install && npm start"
+    "postdeploy": "npm run build"
   },
   "env": {
   },
