@@ -4,7 +4,12 @@ import plnx from 'plnx';
 export const getBalances = (authentication) => {
   return new Promise( resolve => {
     let balances = {};
-    plnx.returnBalances(authentication)
+    let options = authentication;
+    options.urls = {
+      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
+      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
+    };
+    plnx.returnBalances(options)
     .then(_balances => {
       Object.keys(_balances).forEach(asset => {
         const balance = parseFloat(_balances[asset]);
@@ -21,7 +26,12 @@ export const getBalances = (authentication) => {
 export const getTicker = (authentication, pairs = []) => {
   return new Promise( resolve => {
     let ticker = {};
-    plnx.returnTicker(authentication)
+    let options = authentication;
+    options.urls = {
+      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
+      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
+    };
+    plnx.returnTicker(options)
     .then(_ticker => {
       pairs.forEach(pair => {
         ticker[pair] = _ticker[pair];
