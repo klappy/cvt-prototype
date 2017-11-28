@@ -23,7 +23,7 @@ const Pairs = ({
   return (
     <Table>
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-          <TableRow displayRowCheckBox={false}>
+          <TableRow>
             <TableHeaderColumn>Asset</TableHeaderColumn>
             <TableHeaderColumn>Balance</TableHeaderColumn>
             <TableHeaderColumn>24hr Change</TableHeaderColumn>

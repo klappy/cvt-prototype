@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
+import LinearProgress from 'material-ui/LinearProgress';
 import {
   TableRow,
   TableRowColumn,
@@ -15,8 +16,8 @@ const Pair = ({
   let targetDelta = pair.asset.value - pair.config.constantValueTarget;
   let targetBuyDelta = -pair.config.spreadPercent/2/100 * pair.asset.value;
   let targetSellDelta = pair.config.spreadPercent/2/100 * pair.asset.value;
-  if (targetDelta > targetSellDelta && Math.abs(targetDelta) > 0.0001) signal = '-';
-  if (targetDelta < targetBuyDelta && Math.abs(targetDelta) > 0.0001) signal = '+';
+  if (targetDelta >= targetSellDelta && Math.abs(targetDelta) >= 0.0001) signal = '-';
+  if (targetDelta <= targetBuyDelta && Math.abs(targetDelta) >= 0.0001) signal = '+';
 
   const primary = signal === '-';
   const secondary = signal === '+';
@@ -28,15 +29,18 @@ const Pair = ({
   />;
   if (pair.asset.code === 'BTC') button = '';
 
+  const percentToTrade = Math.abs(targetDelta)/0.0001*100;
+
   return (
-    <TableRow {...otherProps} displayRowCheckBox={false}>
+    <TableRow {...otherProps}>
       {otherProps.children[0] /* checkbox passed down from Table-Body*/}
       <TableRowColumn>{pair.asset.code}</TableRowColumn>
-      <TableRowColumn>{pair.asset.balance}</TableRowColumn>
+      <TableRowColumn>{pair.asset.balance.toFixed(5)}</TableRowColumn>
       <TableRowColumn>{percentChange}</TableRowColumn>
-      <TableRowColumn>{pair.asset.value}</TableRowColumn>
+      <TableRowColumn>{parseFloat(pair.asset.value).toFixed(5)}</TableRowColumn>
       <TableRowColumn>
         {button}
+        <LinearProgress mode="determinate" value={percentToTrade} />
       </TableRowColumn>
     </TableRow>
   );
