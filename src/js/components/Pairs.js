@@ -25,8 +25,6 @@ const Pairs = ({
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           <TableRow>
             <TableHeaderColumn>Asset</TableHeaderColumn>
-            <TableHeaderColumn>Balance</TableHeaderColumn>
-            <TableHeaderColumn>24hr Change</TableHeaderColumn>
             <TableHeaderColumn>BTC Value</TableHeaderColumn>
             <TableHeaderColumn>Buy/Sell/Hold</TableHeaderColumn>
           </TableRow>

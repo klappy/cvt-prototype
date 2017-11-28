@@ -35,8 +35,6 @@ const Pair = ({
     <TableRow {...otherProps}>
       {otherProps.children[0] /* checkbox passed down from Table-Body*/}
       <TableRowColumn>{pair.asset.code}</TableRowColumn>
-      <TableRowColumn>{pair.asset.balance.toFixed(5)}</TableRowColumn>
-      <TableRowColumn>{percentChange}</TableRowColumn>
       <TableRowColumn>{parseFloat(pair.asset.value).toFixed(5)}</TableRowColumn>
       <TableRowColumn>
         {button}
