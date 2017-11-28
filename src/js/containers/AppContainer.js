@@ -10,88 +10,24 @@ import IconButton from 'material-ui/IconButton';
 import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh';
 import ReactInterval from 'react-interval';
 import Authentication from '../components/Authentication';
-// helpers
-import * as ExchangeHelpers from '../helpers/ExchangeHelpers';
-import * as PairHelpers from '../helpers/PairHelpers';
 // actions
 import * as Actions from '../actions';
 
 class AppContainer extends React.Component {
-  state = {
-    portfolio: {}
-  };
 
   componentDidMount() {
-    this.populatePortfolio();
+    this.updateReducers();
   }
 
-  populatePortfolio() {
-    const currencyCode = 'BTC';
-    ExchangeHelpers.getBalances(this.props.authentication)
-    .then( balances => {
-      const assetCodes = Object.keys(balances);
-      const pairCodes = assetCodes.map(assetCode => PairHelpers.getPair(assetCode, currencyCode));
-      ExchangeHelpers.getTicker(this.props.authentication, pairCodes)
-      .then( tickers => {
-        const portfolio = {};
-        let currencyBalance;
-        Object.keys(balances).forEach((assetCode) => {
-          const balance = balances[assetCode];
-          const pairCode = PairHelpers.getPair(assetCode, currencyCode);
-          const ticker = tickers[pairCode] ? tickers[pairCode] : {};
-          let value;
-          if (assetCode === currencyCode) {
-            currencyBalance = balance;
-            value = balance;
-          } else {
-            value = tickers[pairCode].last * balance;
-            value = value.toFixed(8);
-          }
-          const currency = {
-            code: currencyCode,
-            currencyBalance
-          };
-          const asset = {
-            code: assetCode,
-            balance,
-            value
-          };
-          let config = {
-            constantValueTarget: 0.01,
-            spreadPercent: 1,
-            feePercent: 0.25
-          };
-          switch (assetCode) {
-            case 'ETH': {
-              config.constantValueTarget = 0.015;
-              break;
-            }
-            case 'XRP': {
-              config.constantValueTarget = 0.005;
-              break;
-            }
-            default: {
-              config.constantValueTarget = 0.01;
-            }
-          }
-          portfolio[pairCode] = {
-            currency,
-            asset,
-            config,
-            ticker,
-            orders: {}
-          };
-        });
-        this.setState(
-          { portfolio }
-        );
-      });
-    });
+  updateReducers() {
+    this.props.actions.updateBalancesAndTicker();
   }
 
   render() {
+    console.log(this.props.balances, this.props.ticker, this.props.portfolio)
+
     const refreshButton = (
-      <IconButton onClick={() => { this.populatePortfolio() }}>
+      <IconButton onClick={() => { this.updateReducers() }}>
         <NavigationRefresh />
       </IconButton>
     );
@@ -108,8 +44,8 @@ class AppContainer extends React.Component {
             iconElementRight={refreshButton}
             iconElementLeft={authenticationButton}
           />
-          <PortfolioContainer authentication={this.props.authentication} portfolio={this.state.portfolio} />
-          <ReactInterval timeout={10000} enabled={true} callback={() => { this.populatePortfolio() }} />
+          <PortfolioContainer authentication={this.props.authentication} portfolio={this.props.portfolio} />
+          <ReactInterval timeout={10000} enabled={true} callback={() => { this.updateReducers() }} />
         </div>
       </MuiThemeProvider>
     );
@@ -118,11 +54,17 @@ class AppContainer extends React.Component {
 
 AppContainer.propTypes = {
   authentication: PropTypes.object.isRequired,
+  balances: PropTypes.object.isRequired,
+  portfolio: PropTypes.object.isRequired,
+  ticker: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  authentication: state.authentication
+  authentication: state.authentication,
+  balances: state.balances,
+  portfolio: state.portfolio,
+  ticker: state.ticker
 });
 
 const mapDispatchToProps = dispatch => ({
