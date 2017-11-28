@@ -96,16 +96,20 @@ class AppContainer extends React.Component {
       </IconButton>
     );
 
+    const authenticationButton = (
+      <Authentication actions={this.props.actions} authentication={this.props.authentication} />
+    );
+
     return (
       <MuiThemeProvider>
         <div>
           <AppBar
             title="Constant Value Target Trading Strategy"
             iconElementRight={refreshButton}
+            iconElementLeft={authenticationButton}
           />
           <PortfolioContainer authentication={this.props.authentication} portfolio={this.state.portfolio} />
           <ReactInterval timeout={10000} enabled={true} callback={() => { this.populatePortfolio() }} />
-          <Authentication actions={this.props.actions} authentication={this.props.authentication} />
         </div>
       </MuiThemeProvider>
     );

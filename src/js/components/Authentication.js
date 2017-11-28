@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import IconButton from 'material-ui/IconButton';
+import VerifiedUser from 'material-ui/svg-icons/action/verified-user';
 
 export default class Authentication extends React.Component {
   state = {
@@ -53,9 +54,11 @@ export default class Authentication extends React.Component {
 
     return (
       <div>
-        <RaisedButton label="Authentication" onClick={this.handleOpen} />
+        <IconButton onClick={this.handleOpen}>
+          <VerifiedUser color="white" />
+        </IconButton>
         <Dialog
-          title="Dialog With Actions"
+          title="Poloniex API"
           actions={actions}
           modal={false}
           open={this.state.open}
@@ -64,12 +67,14 @@ export default class Authentication extends React.Component {
           <TextField
             style={{width: '100%'}}
             hintText="Insert the Poloniex API Key"
+            floatingLabelText="Key"
             defaultValue={this.props.authentication.key}
             onBlur={this.updateKey}
           />
           <TextField
             style={{width: '100%'}}
             hintText="Insert the Poloniex API Secret"
+            floatingLabelText="Secret"
             defaultValue={this.props.authentication.secret}
             onBlur={this.updateSecret}
           />
