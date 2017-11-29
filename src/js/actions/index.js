@@ -3,6 +3,7 @@ import * as ExchangeHelpers from '../helpers/ExchangeHelpers';
 import * as PairHelpers from '../helpers/PairHelpers';
 
 export const updateAuthentication = (key, secret) => ({ type: types.UPDATE_AUTHENTICATION, key, secret });
+export const updateConstantValueTarget = (assetCode, targetValue) => ({ type: types.UPDATE_CONSTANT_VALUE_TARGET, assetCode, targetValue });
 
 export const updateBalancesAndTicker = () => {
   return ((dispatch) => {
@@ -71,7 +72,7 @@ export const updatePortfolio = () => {
       };
       switch (assetCode) {
         case 'ETH': {
-          config.constantValueTarget = 0.015;
+          config.constantValueTarget = 0.02;
           break;
         }
         case 'XRP': {
