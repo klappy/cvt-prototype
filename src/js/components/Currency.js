@@ -38,7 +38,7 @@ const Currency = ({
       const balance = balances[assetCode];
       const ticker = tickers[pairCode];
       const settings = assetSettings[assetCode] ? assetSettings[assetCode] : assetSettings.default;
-      const tradeHistory = tradeHistories[pairCode];
+      const tradeHistory = tradeHistories[pairCode] ? tradeHistories[pairCode] : [];
       const orders = openOrders[pairCode] ? openOrders[pairCode] : [];
 
       if (balance && ticker) {
