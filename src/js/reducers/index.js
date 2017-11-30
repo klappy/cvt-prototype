@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
+import assetSettings from './assetSettings';
 import authentication from './authentication';
 import balances from './balances';
-import portfolio from './portfolio';
-import ticker from './ticker';
+import tickers from './tickers';
 
 const rootReducer = combineReducers({
+  assetSettings,
   authentication,
   balances,
-  portfolio,
-  ticker
+  tickers
 });
 
 export default rootReducer;

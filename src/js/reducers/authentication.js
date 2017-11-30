@@ -5,7 +5,7 @@ const initialState = {
   secret: ''
 };
 
-export default function todos(state = initialState, action) {
+export default function update(state = initialState, action) {
   switch (action.type) {
     case UPDATE_AUTHENTICATION:
       return {

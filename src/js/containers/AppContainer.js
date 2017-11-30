@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // components
-import PortfolioContainer from './PortfolioContainer';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import NavigationRefresh from 'material-ui/svg-icons/navigation/refresh';
 import ReactInterval from 'react-interval';
 import Authentication from '../components/Authentication';
+import Currency from '../components/Currency';
 // actions
 import * as Actions from '../actions';
 
@@ -24,8 +24,6 @@ class AppContainer extends React.Component {
   }
 
   render() {
-    console.log(this.props.balances, this.props.ticker, this.props.portfolio)
-
     const refreshButton = (
       <IconButton onClick={() => { this.updateReducers() }}>
         <NavigationRefresh />
@@ -40,11 +38,18 @@ class AppContainer extends React.Component {
       <MuiThemeProvider>
         <div>
           <AppBar
-            title="Constant Value Target Trading Strategy"
+            title="Constant Value Target Trading"
             iconElementRight={refreshButton}
             iconElementLeft={authenticationButton}
           />
-          <PortfolioContainer authentication={this.props.authentication} portfolio={this.props.portfolio} />
+          <Currency
+            currencyCode="BTC"
+            actions={this.props.actions}
+            authentication={this.props.authentication}
+            assetSettings={this.props.assetSettings}
+            balances={this.props.balances}
+            tickers={this.props.tickers}
+          />
           <ReactInterval timeout={10000} enabled={true} callback={() => { this.updateReducers() }} />
         </div>
       </MuiThemeProvider>
@@ -53,18 +58,18 @@ class AppContainer extends React.Component {
 }
 
 AppContainer.propTypes = {
+  assetSettings: PropTypes.object.isRequired,
   authentication: PropTypes.object.isRequired,
   balances: PropTypes.object.isRequired,
-  portfolio: PropTypes.object.isRequired,
-  ticker: PropTypes.object.isRequired,
+  tickers: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
+  assetSettings: state.assetSettings,
   authentication: state.authentication,
   balances: state.balances,
-  portfolio: state.portfolio,
-  ticker: state.ticker
+  tickers: state.tickers
 });
 
 const mapDispatchToProps = dispatch => ({
