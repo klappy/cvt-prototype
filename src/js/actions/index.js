@@ -2,10 +2,25 @@ import * as types from '../constants/ActionTypes';
 import * as ExchangeHelpers from '../helpers/ExchangeHelpers';
 import * as PairHelpers from '../helpers/PairHelpers';
 
-export const updateBalancesAndTicker = () => {
+
+export const updateAll = () => {
+  return ((dispatch) => {
+    dispatch(updateBalancesAndTickers());
+    dispatch(updateOrdersAndTrades());
+  });
+};
+
+export const updateBalancesAndTickers = () => {
   return ((dispatch) => {
     dispatch(updateTickers());
     dispatch(updateBalances());
+  });
+};
+
+export const updateOrdersAndTrades = () => {
+  return ((dispatch) => {
+    dispatch(updateTradeHistories());
+    dispatch(updateOpenOrders());
   });
 };
 
@@ -23,6 +38,26 @@ export const updateBalances = () => {
     ExchangeHelpers.getCompleteBalances(state.authentication)
     .then(balances => {
       dispatch({ type: types.UPDATE_BALANCES, balances });
+    });
+  });
+};
+
+export const updateTradeHistories = () => {
+  return ((dispatch, getState) => {
+    const state = getState();
+    ExchangeHelpers.getTradeHistories(state.authentication)
+    .then(tradeHistories => {
+      dispatch({ type: types.UPDATE_TRADE_HISTORIES, tradeHistories });
+    });
+  });
+};
+
+export const updateOpenOrders = () => {
+  return ((dispatch, getState) => {
+    const state = getState();
+    ExchangeHelpers.getOpenOrders(state.authentication)
+    .then(openOrders => {
+      dispatch({ type: types.UPDATE_OPEN_ORDERS, openOrders });
     });
   });
 };

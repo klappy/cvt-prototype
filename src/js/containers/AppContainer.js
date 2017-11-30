@@ -16,16 +16,24 @@ import * as Actions from '../actions';
 class AppContainer extends React.Component {
 
   componentDidMount() {
-    this.updateReducers();
+    this.updateAllReducers();
   }
 
-  updateReducers() {
-    this.props.actions.updateBalancesAndTicker();
+  updateAllReducers() {
+    this.props.actions.updateAll();
+  }
+
+  updateOrdersAndTrades() {
+    this.props.actions.updateOrdersAndTrades();
+  }
+
+  updateBalancesAndTickers() {
+    this.props.actions.updateBalancesAndTickers();
   }
 
   render() {
     const refreshButton = (
-      <IconButton onClick={() => { this.updateReducers() }}>
+      <IconButton onClick={() => { this.updateAllReducers() }}>
         <NavigationRefresh />
       </IconButton>
     );
@@ -49,8 +57,11 @@ class AppContainer extends React.Component {
             assetSettings={this.props.assetSettings}
             balances={this.props.balances}
             tickers={this.props.tickers}
+            tradeHistories={this.props.tradeHistories}
+            openOrders={this.props.openOrders}
           />
-          <ReactInterval timeout={10000} enabled={true} callback={() => { this.updateReducers() }} />
+          <ReactInterval timeout={10000} enabled={true} callback={() => { this.updateBalancesAndTickers() }} />
+          <ReactInterval timeout={20000} enabled={true} callback={() => { this.updateOrdersAndTrades() }} />
         </div>
       </MuiThemeProvider>
     );
@@ -62,6 +73,8 @@ AppContainer.propTypes = {
   authentication: PropTypes.object.isRequired,
   balances: PropTypes.object.isRequired,
   tickers: PropTypes.object.isRequired,
+  tradeHistories: PropTypes.object.isRequired,
+  openOrders: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 };
 
@@ -69,7 +82,9 @@ const mapStateToProps = state => ({
   assetSettings: state.assetSettings,
   authentication: state.authentication,
   balances: state.balances,
-  tickers: state.tickers
+  tickers: state.tickers,
+  tradeHistories: state.tradeHistories,
+  openOrders: state.openOrders
 });
 
 const mapDispatchToProps = dispatch => ({

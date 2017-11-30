@@ -18,7 +18,7 @@ export const getBalances = (authentication) => {
       resolve(balances);
     })
     .catch(error => {
-      console.warn(error);
+      // console.warn(error);
     });
   });
 };
@@ -46,7 +46,71 @@ export const getCompleteBalances = (authentication) => {
       resolve(balances);
     })
     .catch(error => {
-      console.warn(error);
+      // console.warn(error);
+    });
+  });
+};
+
+export const getTradeHistories = (authentication) => {
+  return new Promise( resolve => {
+    let options = authentication;
+    options.urls = {
+      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
+      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
+    };
+    options.currencyPair = 'all';
+    plnx.returnTradeHistory(options)
+    .then(_histories => {
+      let histories = {};
+      Object.keys(_histories).forEach(pairCode => {
+        const _trades = _histories[pairCode];
+        const trades = _trades.map(_trade => {
+          let trade = {};
+          Object.keys(_trade).forEach(key => {
+            let floatKeys = ['rate', 'amount', 'total', 'fee'];
+            const value = _trade[key];
+            trade[key] = (floatKeys.includes(key)) ? parseFloat(value) : value;
+          });
+          return trade;
+        });
+        histories[pairCode] = trades;
+      });
+      resolve(histories);
+    })
+    .catch(error => {
+      // console.warn(error);
+    });
+  });
+};
+
+export const getOpenOrders = (authentication) => {
+  return new Promise( resolve => {
+    let options = authentication;
+    options.urls = {
+      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
+      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
+    };
+    options.currencyPair = 'all';
+    plnx.returnOpenOrders(options)
+    .then(_openOrders => {
+      let openOrders = {};
+      Object.keys(_openOrders).forEach(pairCode => {
+        const _orders = _openOrders[pairCode];
+        const orders = _orders.map(_order => {
+          let order = {};
+          Object.keys(_order).forEach(key => {
+            let floatKeys = ['rate', 'amount', 'total', 'fee'];
+            const value = _order[key];
+            order[key] = (floatKeys.includes(key)) ? parseFloat(value) : value;
+          });
+          return order;
+        });
+        openOrders[pairCode] = orders;
+      });
+      resolve(openOrders);
+    })
+    .catch(error => {
+      // console.warn(error);
     });
   });
 };
@@ -67,7 +131,7 @@ export const getTicker = (authentication, pairs = []) => {
       resolve(ticker);
     })
     .catch(error => {
-      console.warn(error);
+      // console.warn(error);
     });
   });
 };

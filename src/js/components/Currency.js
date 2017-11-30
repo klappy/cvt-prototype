@@ -13,18 +13,45 @@ const Currency = ({
   assetSettings,
   balances,
   tickers,
+  tradeHistories,
+  openOrders,
   actions
 }) => {
   const assets = [];
+
+  const balance = <ListItem key="balance"
+    primaryText="Balance"
+    secondaryText={
+      <p>
+        <strong>Available</strong>: {balances.BTC.available}
+        <br/>
+        <strong> On Orders</strong>: {balances.BTC.onOrders}
+      </p>
+    }
+    secondaryTextLines={2}
+  />;
+  assets.push(balance);
+
   Object.keys(balances).forEach((assetCode, index) => {
     if (assetCode !== "BTC") {
       const pairCode = PairHelpers.getPair(assetCode, currencyCode);
       const balance = balances[assetCode];
       const ticker = tickers[pairCode];
       const settings = assetSettings[assetCode] ? assetSettings[assetCode] : assetSettings.default;
+      const tradeHistory = tradeHistories[pairCode];
+      const orders = openOrders[pairCode] ? openOrders[pairCode] : [];
+
       if (balance && ticker) {
         assets.push(
-          <Asset key={index} assetCode={assetCode} settings={settings} balance={balance} ticker={ticker} actions={actions} />
+          <Asset key={index}
+            assetCode={assetCode}
+            settings={settings}
+            balance={balance}
+            ticker={ticker}
+            tradeHistory={tradeHistory}
+            orders={orders}
+            actions={actions}
+          />
         );
       }
     }
@@ -51,6 +78,8 @@ Currency.propTypes = {
   assetSettings: PropTypes.object.isRequired,
   balances: PropTypes.object.isRequired,
   tickers: PropTypes.object.isRequired,
+  tradeHistories: PropTypes.object.isRequired,
+  openOrders: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 };
 

@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import {ListItem} from 'material-ui/List';
 import CircularProgress from 'material-ui/CircularProgress';
 import Divider from 'material-ui/Divider';
+// icons
 import AccessTime from 'material-ui/svg-icons/device/access-time';
 import History from 'material-ui/svg-icons/action/history';
 import Timeline from 'material-ui/svg-icons/action/timeline';
+import AddCircleOutline from 'material-ui/svg-icons/content/add-circle-outline';
+import RemoveCircleOutline from 'material-ui/svg-icons/content/remove-circle-outline';
 import * as AssetIcons from 'react-cryptocoins';
 
 import AssetSettings from './AssetSettings';
@@ -15,6 +18,8 @@ const Asset = ({
   settings,
   balance,
   ticker,
+  tradeHistory,
+  orders,
   actions
 }) => {
   // console.log(assetCode, settings, balance, ticker)
@@ -39,63 +44,79 @@ const Asset = ({
 
   const percentToTrade = Math.abs(targetDelta)/0.0001*100;
 
-  const tradeHistory = [
-    {type: "sell", rate: 0.02565498, amount: 0.10000000, total: 0.00256549},
-    {type: "buy", rate: 0.02465499, amount: 0.10000000, total: 0.00246549}
-  ];
   const tradeHistoryListItems = tradeHistory.map((trade, index) => (
     <ListItem key={index}
+      leftIcon={(trade.type === 'buy') ? <AddCircleOutline /> : <RemoveCircleOutline />}
       primaryText={trade.type}
       secondaryText={
-        <span><strong>Rate</strong>: {trade.rate}, <strong>Amount</strong>: {trade.amount}, <strong>Total</strong>: {trade.total}</span>
+        <p>
+          <strong>ID</strong>: {trade.tradeID},
+          <strong> Amount</strong>: {trade.amount.toFixed(5)}
+          <br/>
+          <strong>Rate</strong>: {trade.rate.toFixed(5)},
+          <strong> Total</strong>: {trade.total.toFixed(5)}
+        </p>
       }
+      secondaryTextLines={2}
     />
   ));
 
-  const openOrders = [
-    {orderNumber: "120466", type: "sell", rate: 0.025, amount: 100, total: 2.5},
-    {orderNumber: "120467", type: "sell", rate: 0.04, amount: 100, total: 4}
-  ];
-  const openOrdersListItems = openOrders.map((order, index) => (
+  const openOrdersListItems = orders.map((order, index) => (
     <ListItem key={index}
+      leftIcon={(order.type === 'buy') ? <AddCircleOutline /> : <RemoveCircleOutline />}
       primaryText={order.type}
       secondaryText={
-        <span><strong>Number</strong>: {order.orderNumber}, <strong>Rate</strong>: {order.rate}, <strong>Total</strong>: {order.total}</span>
+        <p>
+          <strong>ID</strong>: {order.orderNumber},
+          <strong> Amount</strong>: {order.amount.toFixed(5)}
+          <br/>
+          <strong>Rate</strong>: {order.rate.toFixed(5)},
+          <strong> Total</strong>: {order.total.toFixed(5)}
+        </p>
       }
+      secondaryTextLines={2}
     />
   ));
 
   const nestedItems = [
+    <Divider key="divider0" inset={true} />,
     <ListItem key="balance"
       primaryText="Balance"
       secondaryText={
-        <span>
+        <p>
           <strong>Available</strong>: {balance.available.toFixed(4)},
-          <strong> On Orders</strong>: {balance.onOrders.toFixed(4)},
-          <strong> BTC Value</strong>: {balance.btcValue.toFixed(4)}
-        </span>
+          <strong> On Orders</strong>: {balance.onOrders.toFixed(4)}
+          <br/>
+          <strong>BTC Value</strong>: {balance.btcValue.toFixed(4)}
+        </p>
       }
+      secondaryTextLines={2}
       leftIcon={<CircularProgress size={22} thickness={2.5} mode="determinate" value={percentToTrade} />}
     />,
+    <Divider key="divider1" inset={true} />,
     <ListItem key="ticker"
-    primaryText="Ticker"
-    secondaryText={
-      <span>
-        <strong>Last</strong>: {ticker.last.toFixed(4)},
-        <strong> Low</strong>: {ticker.lowestAsk.toFixed(4)},
-        <strong> High</strong>: {ticker.highestBid.toFixed(4)},
-        <strong> Change</strong>: {(ticker.percentChange*100).toFixed(4)}%
-      </span>
-    }
-    leftIcon={<Timeline />}
+      primaryText="Ticker"
+      secondaryText={
+        <p>
+          <strong>Last</strong>: {ticker.last.toFixed(4)},
+          <strong> Change</strong>: {(ticker.percentChange*100).toFixed(4)}%
+          <br/>
+          <strong>Low</strong>: {ticker.lowestAsk.toFixed(4)},
+          <strong> High</strong>: {ticker.highestBid.toFixed(4)}
+        </p>
+      }
+      secondaryTextLines={2}
+      leftIcon={<Timeline />}
     />,
+    <Divider key="divider2" inset={true} />,
     <ListItem key="open"
       primaryText="Open Orders"
       leftIcon={<AccessTime />}
       primaryTogglesNestedList={true}
       nestedItems={openOrdersListItems}
-      initiallyOpen={false}
+      initiallyOpen={true}
     />,
+    <Divider key="divider3" inset={true} />,
     <ListItem key="history"
       primaryText="Trade History"
       leftIcon={<History />}
@@ -103,6 +124,7 @@ const Asset = ({
       nestedItems={tradeHistoryListItems}
       initiallyOpen={false}
     />,
+    <Divider key="divider4" inset={true} />,
     <AssetSettings key="0" assetCode={assetCode} settings={settings} actions={actions}/>
   ];
 
@@ -111,15 +133,17 @@ const Asset = ({
   return (
     <div>
       <Divider />
-
       <ListItem
         leftAvatar={<AssetIcon size={40} color='rgb(117, 117, 117)' />}
         primaryText={assetCode}
         secondaryText={
-          <span style={orderRecommendationStyle}>
-            <strong>{orderRecommendationVerb}</strong> {signal + Math.abs(targetDelta).toFixed(5)}
-          </span>
+          <p>
+            <span style={orderRecommendationStyle}><strong>{orderRecommendationVerb}:</strong> {signal + Math.abs(targetDelta).toFixed(5)}</span>
+            <br />
+            <strong>BTC Value:</strong> {balance.btcValue}
+          </p>
         }
+        secondaryTextLines={2}
         primaryTogglesNestedList={true}
         nestedItems={nestedItems}
         initiallyOpen={false}
@@ -133,6 +157,8 @@ Asset.propTypes = {
   balance: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   ticker: PropTypes.object.isRequired,
+  tradeHistory: PropTypes.array.isRequired,
+  orders: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired
 };
 
