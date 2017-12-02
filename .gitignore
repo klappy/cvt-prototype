@@ -1,4 +1,6 @@
 auth.json
+.DS_Store
+build/
 
 # Logs
 logs
