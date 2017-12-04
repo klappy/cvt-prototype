@@ -90,7 +90,23 @@ export const placeOrder = (order) => {
     const state = getState();
     ExchangeHelpers.placeOrder(state.authentication, order)
     .then(response => {
+      const message = {
+        primaryText: 'Order Placed',
+        secondaryText: JSON.stringify(response)
+      };
+      addMessage(message);
       dispatch(updateAll());
     })
+    .catch(error => {
+      const message = {
+        primaryText: 'Order Placed',
+        secondaryText: JSON.stringify(error)
+      };
+      addMessage(message);
+    });
   });
-}
+};
+
+export const addMessage = (message) => ({ type: types.ADD_MESSAGE, message });
+export const removeMessage = (index) => ({ type: types.REMOVE_MESSAGE, index });
+export const clearMessages = () => ({ type: types.CLEAR_MESSAGES });
