@@ -7,13 +7,14 @@ import Balance from './Balance';
 import Ticker from './Ticker';
 import OpenOrders from './OpenOrders';
 import TradeHistory from './TradeHistory';
+import AssetSettings from './AssetSettings';
+import PlaceOrders from './PlaceOrders';
 // icons
 import * as AssetIcons from 'react-cryptocoins';
 
-import AssetSettings from './AssetSettings';
-
 const Asset = ({
   assetCode,
+  currencyCode,
   settings,
   balance,
   ticker,
@@ -22,9 +23,9 @@ const Asset = ({
   actions
 }) => {
   let signal = '';
-  let targetDelta = balance.btcValue - settings.target;
-  let targetBuyDelta = -settings.spread/2/100 * balance.btcValue;
-  let targetSellDelta = settings.spread/2/100 * balance.btcValue;
+  const targetDelta = balance.btcValue - settings.target;
+  const targetBuyDelta = -settings.spread/2/100 * balance.btcValue;
+  const targetSellDelta = settings.spread/2/100 * balance.btcValue;
   if (targetDelta >= targetSellDelta && Math.abs(targetDelta) >= 0.0001) signal = '-';
   if (targetDelta <= targetBuyDelta && Math.abs(targetDelta) >= 0.0001) signal = '+';
 
@@ -40,6 +41,14 @@ const Asset = ({
   }
 
   const nestedItems = [
+    <PlaceOrders key="placeOrders"
+      assetCode={assetCode}
+      currencyCode={currencyCode}
+      balance={balance}
+      ticker={ticker}
+      settings={settings}
+      actions={actions}
+    />,
     <Divider key="divider0" inset={true} />,
     <Balance key="balance" balance={balance} />,
     <Divider key="divider1" inset={true} />,
@@ -85,6 +94,7 @@ const Asset = ({
 
 Asset.propTypes = {
   assetCode: PropTypes.string.isRequired,
+  currencyCode: PropTypes.string.isRequired,
   balance: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   ticker: PropTypes.object.isRequired,

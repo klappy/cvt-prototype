@@ -135,3 +135,66 @@ export const getTicker = (authentication, pairs = []) => {
     });
   });
 };
+
+export const placeOrder = (authentication, order) => {
+  return new Promise( (resolve, reject) => {
+    let options = authentication;
+    options.urls = {
+      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
+      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
+    };
+    if (order.type === 'buy') {
+      placeBuyOrder(authentication, order)
+      .then(response => {
+        resolve(response);
+      });
+    } else if (order.type === 'sell') {
+      placeBuyOrder(authentication, order)
+      .then(response => {
+        resolve(response);
+      });
+    } else {
+      reject('No trade type in order. ' + JSON.stringify(order));
+    }
+  });
+};
+
+export const placeBuyOrder = (authentication, order) => {
+  return new Promise( resolve => {
+    let options = authentication;
+    options.urls = {
+      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
+      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
+    };
+    options.currencyPair = order.currencyPair;
+    options.rate = order.rate;
+    options.amount = order.amount;
+    plnx.buy(options)
+    .then(response => {
+      resolve(response);
+    })
+    .catch(error => {
+      // console.warn(error);
+    });
+  });
+};
+
+export const placeSellOrder = (authentication, order) => {
+  return new Promise( resolve => {
+    let options = authentication;
+    options.urls = {
+      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
+      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
+    };
+    options.currencyPair = order.currencyPair;
+    options.rate = order.rate;
+    options.amount = order.amount;
+    plnx.sell(options)
+    .then(response => {
+      resolve(response);
+    })
+    .catch(error => {
+      // console.warn(error);
+    });
+  });
+};

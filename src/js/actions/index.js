@@ -2,7 +2,6 @@ import * as types from '../constants/ActionTypes';
 import * as ExchangeHelpers from '../helpers/ExchangeHelpers';
 import * as PairHelpers from '../helpers/PairHelpers';
 
-
 export const updateAll = () => {
   return ((dispatch) => {
     dispatch(updateBalancesAndTickers());
@@ -85,3 +84,13 @@ export const updateTickers = () => {
     });
   });
 };
+
+export const placeOrder = (order) => {
+  return ((dispatch, getState) => {
+    const state = getState();
+    ExchangeHelpers.placeOrder(state.authentication, order)
+    .then(response => {
+      dispatch(updateAll());
+    })
+  });
+}

@@ -45,6 +45,7 @@ const Currency = ({
         assets.push(
           <Asset key={index}
             assetCode={assetCode}
+            currencyCode={currencyCode}
             settings={settings}
             balance={balance}
             ticker={ticker}
