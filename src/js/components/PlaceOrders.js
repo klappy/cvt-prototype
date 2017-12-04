@@ -67,10 +67,10 @@ export default class PlaceOrders extends React.Component {
         <Dialog
           title="Place Orders"
           actions={actionButtons}
-          modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
           contentStyle={{width: '100%', maxWidth: 'none'}}
+          modal={false}
         >
           <Divider />
           <Subheader>Place an Urgent Order.</Subheader>

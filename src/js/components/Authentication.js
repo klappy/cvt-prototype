@@ -60,9 +60,10 @@ export default class Authentication extends React.Component {
         <Dialog
           title="Poloniex API"
           actions={actions}
-          modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
+          contentStyle={{width: '100%', maxWidth: 'none'}}
+          modal={false}
         >
           <TextField
             style={{width: '100%'}}

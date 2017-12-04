@@ -65,9 +65,10 @@ export default class AssetSettings extends React.Component {
         <Dialog
           title="Asset Settings"
           actions={actionButtons}
-          modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
+          contentStyle={{width: '100%', maxWidth: 'none'}}
+          modal={false}
         >
           <TextField
             style={{width: '100%'}}
