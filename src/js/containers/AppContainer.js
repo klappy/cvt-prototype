@@ -42,6 +42,20 @@ class AppContainer extends React.Component {
       <Authentication actions={this.props.actions} authentication={this.props.authentication} />
     );
 
+    let currency = <div />;
+    if (this.props.balances['BTC']) {
+      currency = <Currency
+        currencyCode="BTC"
+        actions={this.props.actions}
+        authentication={this.props.authentication}
+        assetSettings={this.props.assetSettings}
+        balances={this.props.balances}
+        tickers={this.props.tickers}
+        tradeHistories={this.props.tradeHistories}
+        openOrders={this.props.openOrders}
+      />;
+    }
+
     return (
       <MuiThemeProvider>
         <div>
@@ -50,16 +64,7 @@ class AppContainer extends React.Component {
             iconElementRight={refreshButton}
             iconElementLeft={authenticationButton}
           />
-          <Currency
-            currencyCode="BTC"
-            actions={this.props.actions}
-            authentication={this.props.authentication}
-            assetSettings={this.props.assetSettings}
-            balances={this.props.balances}
-            tickers={this.props.tickers}
-            tradeHistories={this.props.tradeHistories}
-            openOrders={this.props.openOrders}
-          />
+          {currency}
           <ReactInterval timeout={10000} enabled={true} callback={() => { this.updateBalancesAndTickers() }} />
           <ReactInterval timeout={20000} enabled={true} callback={() => { this.updateOrdersAndTrades() }} />
         </div>

@@ -12,7 +12,10 @@ const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStor
 const store = createStore(reducer, persistedState, compose(applyMiddleware(thunk)));
 
 store.subscribe(()=>{
-  localStorage.setItem('reduxState', JSON.stringify(store.getState()));
+  const state = store.getState();
+  const {authentication, assetSettings, messages} = state;
+  const reduxState = {authentication, assetSettings, messages};
+  localStorage.setItem('reduxState', JSON.stringify(reduxState));
 });
 
 ReactDOM.render(
