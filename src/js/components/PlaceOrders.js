@@ -71,16 +71,17 @@ export default class PlaceOrders extends React.Component {
           onRequestClose={this.handleClose}
           contentStyle={{width: '100%', maxWidth: 'none'}}
           modal={false}
+          autoScrollBodyContent={true}
         >
           <Divider />
           <Subheader>Place an Urgent Order.</Subheader>
-          <PlaceOrder key="urgent" order={urgentOrder} />
+          <PlaceOrder actions={this.props.actions} key="urgent" order={urgentOrder} />
           <Divider />
           <Subheader>Place a Buy Order for when the price goes lower.</Subheader>
-          <PlaceOrder key="buy" order={buyOrder} />
+          <PlaceOrder actions={this.props.actions} key="buy" order={buyOrder} />
           <Divider />
           <Subheader>Place a Sell Order for when the price goes higher.</Subheader>
-          <PlaceOrder key="sell" order={sellOrder} />
+          <PlaceOrder actions={this.props.actions} key="sell" order={sellOrder} />
         </Dialog>
       </div>
     );

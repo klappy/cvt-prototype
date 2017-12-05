@@ -149,7 +149,7 @@ export const placeOrder = (authentication, order) => {
         resolve(response);
       });
     } else if (order.type === 'sell') {
-      placeBuyOrder(authentication, order)
+      placeSellOrder(authentication, order)
       .then(response => {
         resolve(response);
       });

@@ -94,7 +94,7 @@ export const placeOrder = (order) => {
         primaryText: 'Order Placed',
         secondaryText: JSON.stringify(response)
       };
-      addMessage(message);
+      dispatch(addMessage(message));
       dispatch(updateAll());
     })
     .catch(error => {
@@ -102,7 +102,7 @@ export const placeOrder = (order) => {
         primaryText: 'Order Placed',
         secondaryText: JSON.stringify(error)
       };
-      addMessage(message);
+      dispatch(addMessage(message));
     });
   });
 };

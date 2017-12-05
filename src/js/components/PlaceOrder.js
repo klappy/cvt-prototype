@@ -16,10 +16,10 @@ const PlaceOrder = ({
       primaryText={order.type}
       secondaryText={
         <p>
-        <strong>Amount</strong>: {order.amount.toFixed(8)},
-        <strong> Rate</strong>: {order.rate.toFixed(8)}
-        <br/>
-        <strong> BTC Total</strong>: {order.btcValue.toFixed(8)}
+          <strong>Amount</strong>: {order.amount.toFixed(8)},
+          <strong> Rate</strong>: {order.rate.toFixed(8)}
+          <br/>
+          <strong> BTC Total</strong>: {order.btcValue.toFixed(8)}
         </p>
       }
       secondaryTextLines={2}

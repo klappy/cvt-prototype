@@ -24,6 +24,7 @@ export default class Messages extends React.Component {
   };
 
   handleDismiss = () => {
+    this.props.actions.clearMessages();
     this.handleClose();
   };
 
@@ -32,16 +33,16 @@ export default class Messages extends React.Component {
 
     const actionButtons = [
       <FlatButton
-        key="cancel"
-        label="Cancel"
+        key="dismiss"
+        label="Dismiss All"
         primary={false}
-        onClick={this.handleClose}
+        onClick={this.handleDismiss}
       />,
       <FlatButton
-        key="dismiss"
-        label="Dismiss Checked"
+        key="close"
+        label="Close"
         primary={true}
-        onClick={this.handleDismiss}
+        onClick={this.handleClose}
       />
     ];
 
