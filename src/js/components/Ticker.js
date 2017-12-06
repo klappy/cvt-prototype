@@ -14,11 +14,11 @@ const Ticker = ({
       primaryText="Ticker"
       secondaryText={
         <p>
-          <strong>Last</strong>: {ticker.last.toFixed(6)},
-          <strong> Change</strong>: {(ticker.percentChange*100).toFixed(4)}%
+          <strong>Last</strong>: {ticker.last.toFixed(8)},
+          <strong> Change</strong>: {(ticker.percentChange*100).toFixed(2)}%
           <br/>
-          <strong>Low</strong>: {ticker.lowestAsk.toFixed(6)},
-          <strong> High</strong>: {ticker.highestBid.toFixed(6)}
+          <strong>Low</strong>: {ticker.lowestAsk.toFixed(8)},
+          <strong> High</strong>: {ticker.highestBid.toFixed(8)}
         </p>
       }
       secondaryTextLines={2}

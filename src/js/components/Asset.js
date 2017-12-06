@@ -32,11 +32,11 @@ const Asset = ({
   let orderRecommendationStyle = {};
   let orderRecommendationVerb = 'Hold';
   if (signal === '-') {
-    orderRecommendationStyle.color = 'green';
+    orderRecommendationStyle.color = 'rgb(0, 188, 212)';
     orderRecommendationVerb = 'Sell';
   }
   if (signal === '+') {
-    orderRecommendationStyle.color = 'red';
+    orderRecommendationStyle.color = 'rgb(255, 64, 129)';
     orderRecommendationVerb = 'Buy';
   }
 
@@ -64,16 +64,21 @@ const Asset = ({
   const percentToTrade = Math.abs(targetDelta)/0.0001*100;
 
   const AssetIcon = AssetIcons[assetCode[0].toUpperCase() + assetCode.substring(1).replace(/\d+$/, "").toLowerCase()];
+  const assetIconColor = orderRecommendationStyle.color ? orderRecommendationStyle.color : 'rgb(117, 117, 117)';
+
+  let progressColor;
+  if (targetDelta < 0) progressColor = 'rgb(255, 64, 129)';
+  if (targetDelta > 0) progressColor = 'rgb(0, 188, 212)';
 
   return (
     <div>
       <Divider />
       <ListItem
-        leftAvatar={<AssetIcon size={40} color='rgb(117, 117, 117)' />}
+        leftAvatar={<AssetIcon size={40} color={assetIconColor} />}
         primaryText={
           <span>
             {assetCode}
-            <LinearProgress size={22} thickness={2.5} mode="determinate" value={percentToTrade} />
+            <LinearProgress size={22} thickness={2.5} mode="determinate" color={progressColor} value={percentToTrade} />
           </span>
         }
         secondaryText={

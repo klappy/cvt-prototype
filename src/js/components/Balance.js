@@ -14,10 +14,10 @@ const Balance = ({
       primaryText="Balance"
       secondaryText={
         <p>
-          <strong>Available</strong>: {balance.available.toFixed(6)},
-          <strong> On Orders</strong>: {balance.onOrders.toFixed(6)}
+          <strong>Available</strong>: {balance.available.toFixed(2)},
+          <strong> Orders</strong>: {balance.onOrders.toFixed(8)}
           <br/>
-          <strong>BTC Value</strong>: {balance.btcValue.toFixed(6)}
+          <strong>BTC Value</strong>: {balance.btcValue.toFixed(8)}
         </p>
       }
       secondaryTextLines={2}

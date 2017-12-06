@@ -4,15 +4,17 @@ export const getPair = (assetCode, currencyCode) => {
 };
 
 export const getTargetBuyOrder = (assetCode, currencyCode, balance, ticker, settings) => {
-  const rate = getTargetBuyRate(settings.target, balance.available, settings.spread);
-  const amount = getTargetBuyAmount(settings.target, balance.available, settings.spread);
+  const assetBalance = balance.available + balance.onOrders;
+  const rate = getTargetBuyRate(settings.target, assetBalance, settings.spread);
+  const amount = getTargetBuyAmount(settings.target, assetBalance, settings.spread);
   const order = getOrder('buy', assetCode, currencyCode, rate, amount);
   return order;
 };
 
 export const getTargetSellOrder = (assetCode, currencyCode, balance, ticker, settings) => {
-  const rate = getTargetSellRate(settings.target, balance.available, settings.spread);
-  const amount = getTargetSellAmount(settings.target, balance.available, settings.spread);
+  const assetBalance = balance.available + balance.onOrders;
+  const rate = getTargetSellRate(settings.target, assetBalance, settings.spread);
+  const amount = getTargetSellAmount(settings.target, assetBalance, settings.spread);
   const order = getOrder('sell', assetCode, currencyCode, rate, amount);
   return order;
 };
@@ -20,9 +22,9 @@ export const getTargetSellOrder = (assetCode, currencyCode, balance, ticker, set
 export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, settings) => {
   const urgentBuyOrder = getUrgentBuyOrder(assetCode, currencyCode, balance, ticker, settings);
   const urgentSellOrder = getUrgentSellOrder(assetCode, currencyCode, balance, ticker, settings);
-  let order;
-  if (urgentBuyOrder.amount > 0) order = urgentBuyOrder;
-  if (urgentSellOrder.amount > 0) order = urgentSellOrder;
+  let order = getOrder('hold', assetCode, currencyCode, ticker.last, 0);
+  if (urgentBuyOrder.btcValue > 0.0001) order = urgentBuyOrder;
+  if (urgentSellOrder.btcValue > 0.0001) order = urgentSellOrder;
   return order;
 };
 

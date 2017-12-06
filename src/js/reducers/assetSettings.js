@@ -2,8 +2,8 @@ import { UPDATE_ASSET_SETTINGS, SET_DEFAULT_ASSET_SETTINGS } from '../constants/
 
 const initialState = {
   default: {
-    target: 0.01,
-    spread: 1
+    target: 0.005,
+    spread: 4
   }
 };
 
