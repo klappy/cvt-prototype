@@ -8,6 +8,7 @@ import RemoveCircleOutline from 'material-ui/svg-icons/content/remove-circle-out
 
 const OpenOrders = ({
   orders,
+  actions,
   ...otherProps
 }) => {
 
@@ -25,6 +26,7 @@ const OpenOrders = ({
         </p>
       }
       secondaryTextLines={2}
+      onClick={() => { actions.cancelOrder(order) }}
     />
   ));
 
@@ -41,7 +43,8 @@ const OpenOrders = ({
 };
 
 OpenOrders.propTypes = {
-  orders: PropTypes.array.isRequired
+  orders: PropTypes.array.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
 export default OpenOrders;

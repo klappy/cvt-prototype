@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import {ListItem} from 'material-ui/List';
 import LinearProgress from 'material-ui/LinearProgress';
 import Divider from 'material-ui/Divider';
+import Badge from 'material-ui/Badge';
+import IconButton from 'material-ui/IconButton';
+// components
 import Balance from './Balance';
 import Ticker from './Ticker';
 import OpenOrders from './OpenOrders';
@@ -54,7 +57,7 @@ const Asset = ({
     <Divider key="divider1" inset={true} />,
     <Ticker key="ticker" ticker={ticker} />,
     <Divider key="divider2" inset={true} />,
-    <OpenOrders key="orders" orders={orders} />,
+    <OpenOrders key="orders" orders={orders} actions={actions} />,
     <Divider key="divider3" inset={true} />,
     <TradeHistory key="history" tradeHistory={tradeHistory} />,
     <Divider key="divider4" inset={true} />,
@@ -65,6 +68,16 @@ const Asset = ({
 
   const AssetIcon = AssetIcons[assetCode[0].toUpperCase() + assetCode.substring(1).replace(/\d+$/, "").toLowerCase()];
   const assetIconColor = orderRecommendationStyle.color ? orderRecommendationStyle.color : 'rgb(117, 117, 117)';
+  const assetIcon = (
+    <Badge
+      badgeContent={orders.length}
+      secondary={true}
+      badgeStyle={{top: 25, right: -10}}
+      style={{padding: 0}}
+    >
+      <AssetIcon size={40} color={assetIconColor} />
+    </Badge>
+  );
 
   let progressColor;
   if (targetDelta < 0) progressColor = 'rgb(255, 64, 129)';
@@ -74,7 +87,7 @@ const Asset = ({
     <div>
       <Divider />
       <ListItem
-        leftAvatar={<AssetIcon size={40} color={assetIconColor} />}
+        leftAvatar={assetIcon}
         primaryText={
           <span>
             {assetCode}

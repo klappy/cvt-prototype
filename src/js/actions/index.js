@@ -95,7 +95,30 @@ export const placeOrder = (order) => {
         secondaryText: JSON.stringify(response)
       };
       dispatch(addMessage(message));
-      dispatch(updateAll());
+      dispatch(updateBalances());
+      dispatch(updateOpenOrders());
+    })
+    .catch(error => {
+      const message = {
+        primaryText: 'Order Placed',
+        secondaryText: JSON.stringify(error)
+      };
+      dispatch(addMessage(message));
+    });
+  });
+};
+
+export const cancelOrder = (order) => {
+  return ((dispatch, getState) => {
+    const state = getState();
+    ExchangeHelpers.cancelOrder(state.authentication, order.orderNumber)
+    .then(() => {
+      const message = {
+        primaryText: order.currencyPair + ' Order Canceled',
+        secondaryText: 'Order Number: ' + order.orderNumber
+      };
+      dispatch(addMessage(message));
+      dispatch(updateOpenOrders());
     })
     .catch(error => {
       const message = {

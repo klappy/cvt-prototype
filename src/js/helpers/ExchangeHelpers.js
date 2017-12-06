@@ -198,3 +198,21 @@ export const placeSellOrder = (authentication, order) => {
     });
   });
 };
+
+export const cancelOrder = (authentication, orderNumber) => {
+  return new Promise( resolve => {
+    let options = authentication;
+    options.urls = {
+      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
+      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
+    };
+    options.orderNumber = orderNumber;
+    plnx.cancelOrder(options)
+    .then(response => {
+      resolve(response);
+    })
+    .catch(error => {
+      // console.warn(error);
+    });
+  });
+};
