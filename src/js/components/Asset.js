@@ -4,7 +4,6 @@ import {ListItem} from 'material-ui/List';
 import LinearProgress from 'material-ui/LinearProgress';
 import Divider from 'material-ui/Divider';
 import Badge from 'material-ui/Badge';
-import IconButton from 'material-ui/IconButton';
 // components
 import Balance from './Balance';
 import Ticker from './Ticker';
