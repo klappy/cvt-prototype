@@ -18,10 +18,10 @@ const OpenOrders = ({
       secondaryText={
         <p>
           <strong>ID</strong>: {order.orderNumber},
-          <strong> Amount</strong>: {order.amount.toFixed(5)}
+          <strong> Amount</strong>: {order.amount.toFixed(6)}
           <br/>
-          <strong>Rate</strong>: {order.rate.toFixed(5)},
-          <strong> Total</strong>: {order.total.toFixed(5)}
+          <strong>Rate</strong>: {order.rate.toFixed(6)},
+          <strong> Total</strong>: {order.total.toFixed(6)}
         </p>
       }
       secondaryTextLines={2}

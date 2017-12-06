@@ -63,7 +63,7 @@ const Asset = ({
 
   const percentToTrade = Math.abs(targetDelta)/0.0001*100;
 
-  const AssetIcon = AssetIcons[assetCode[0].toUpperCase() + assetCode.substring(1).toLowerCase()];
+  const AssetIcon = AssetIcons[assetCode[0].toUpperCase() + assetCode.substring(1).replace(/\d+$/, "").toLowerCase()];
 
   return (
     <div>
@@ -78,7 +78,7 @@ const Asset = ({
         }
         secondaryText={
           <p>
-            <span style={orderRecommendationStyle}><strong>{orderRecommendationVerb}:</strong> {signal + Math.abs(targetDelta).toFixed(5)}</span>
+            <span style={orderRecommendationStyle}><strong>{orderRecommendationVerb}:</strong> {signal + Math.abs(targetDelta).toFixed(8)}</span>
             <br />
             <strong>BTC Value:</strong> {balance.btcValue}
           </p>
