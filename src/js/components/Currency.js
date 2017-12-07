@@ -62,19 +62,24 @@ const Currency = ({
   });
 
   let btcUsdtPairCode = PairHelpers.getPair('BTC', 'USDT');
+  const usdtBtcTicker = tickers[btcUsdtPairCode];
+  let usdtBtcPrice;
+  if (usdtBtcTicker) {
+    usdtBtcPrice = tickers[btcUsdtPairCode].highestBid;
+  }
   let totalUSDValue;
-  if (tickers[btcUsdtPairCode]) {
-    totalUSDValue = totalBTCValue * tickers[btcUsdtPairCode].highestBid;
+  if (usdtBtcPrice) {
+    totalUSDValue = totalBTCValue * usdtBtcPrice;
   }
 
   return (
     <Paper>
       <List>
         <Subheader>
-          <strong>BTC Value: </strong>
-          {totalBTCValue.toFixed(8)},
-          <strong> USDT Value: </strong>
-          ${(totalUSDValue) ? totalUSDValue.toFixed(2): ''}
+          <strong>BTC/USD: </strong>
+          {totalBTCValue.toFixed(4)}<strong>/</strong>${(totalUSDValue) ? totalUSDValue.toFixed(2): ''},
+          <strong> USD/BTC: </strong>
+          ${usdtBtcPrice.toFixed(2)}
         </Subheader>
         <ListItem
           primaryText={currencyCode}
