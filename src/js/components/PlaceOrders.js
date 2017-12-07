@@ -25,15 +25,6 @@ export default class PlaceOrders extends React.Component {
     this.setState({open: false});
   };
 
-  placeOrders = (orders) => {
-    this.props.actions.placeOrders(
-      this.props.assetCode,
-      this.props.currencyCode,
-      orders
-    );
-    this.handleClose();
-  };
-
   render() {
     const {assetCode, currencyCode, balance, ticker, settings, ...otherProps} = this.props;
 
@@ -43,16 +34,10 @@ export default class PlaceOrders extends React.Component {
 
     const actionButtons = [
       <FlatButton
-        key="cancel"
-        label="Cancel"
-        primary={false}
-        onClick={this.handleClose}
-      />,
-      <FlatButton
-        key="submit"
-        label="Submit"
+        key="close"
+        label="Close"
         primary={true}
-        onClick={this.placeOrders}
+        onClick={this.handleClose}
       />
     ];
 
