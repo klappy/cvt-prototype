@@ -22,15 +22,22 @@ export const getTargetSellOrder = (assetCode, currencyCode, balance, ticker, set
 export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, settings) => {
   const urgentBuyOrder = getUrgentBuyOrder(assetCode, currencyCode, balance, ticker, settings);
   const urgentSellOrder = getUrgentSellOrder(assetCode, currencyCode, balance, ticker, settings);
-  let order = getOrder('hold', assetCode, currencyCode, ticker.last, 0);
-  if (urgentBuyOrder.btcValue > 0.0001) order = urgentBuyOrder;
-  if (urgentSellOrder.btcValue > 0.0001) order = urgentSellOrder;
+  const targetBuyOrder = getTargetBuyOrder(assetCode, currencyCode, balance, ticker, settings);
+  const targetSellOrder = getTargetSellOrder(assetCode, currencyCode, balance, ticker, settings);
+  const targetDelta = Math.abs(balance.btcValue - settings.target);
+  const holdAmount = targetDelta/ticker.last;
+  const denominator = Math.max(targetBuyOrder.btcValue, targetSellOrder.btcValue);
+  const percentToTrade = targetDelta/denominator;
+  let order = getOrder('hold', assetCode, currencyCode, ticker.last, holdAmount);
+  if (urgentBuyOrder.btcValue >= targetBuyOrder.btcValue) order = urgentBuyOrder;
+  if (urgentSellOrder.btcValue >= targetSellOrder.btcValue) order = urgentSellOrder;
+  order.percentToTrade = percentToTrade;
   return order;
 };
 
 export const getUrgentBuyOrder = (assetCode, currencyCode, balance, ticker, settings) => {
   const rate = ticker.lowestAsk;
-  let amount = getCurrentOrderAmount(settings.target, balance.btcValue, rate);
+  let amount = getUrgentOrderAmount(settings.target, balance.btcValue, rate);
   amount = (amount < 0) ? Math.abs(amount) : 0;
   const order = getOrder('buy', assetCode, currencyCode, rate, amount);
   return order;
@@ -38,7 +45,7 @@ export const getUrgentBuyOrder = (assetCode, currencyCode, balance, ticker, sett
 
 export const getUrgentSellOrder = (assetCode, currencyCode, balance, ticker, settings) => {
   const rate = ticker.highestBid;
-  let amount = getCurrentOrderAmount(settings.target, balance.btcValue, rate);
+  let amount = getUrgentOrderAmount(settings.target, balance.btcValue, rate);
   amount = (amount > 0) ? amount : 0;
   const order = getOrder('sell', assetCode, currencyCode, rate, amount);
   return order;
@@ -85,7 +92,7 @@ export const getTargetSellAmount = (targetValue, assetBalance, spread) => {
   return amount;
 };
 
-export const getCurrentOrderAmount = (targetValue, assetValue, rate) => {
+export const getUrgentOrderAmount = (targetValue, assetValue, rate) => {
   const btcAmount = assetValue - targetValue;
   const amount = btcAmount / rate;
   return amount;
