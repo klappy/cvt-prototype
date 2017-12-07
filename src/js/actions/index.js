@@ -66,9 +66,11 @@ export const updateTickers = () => {
     const state = getState();
     const currencyCode = 'BTC';
     const assetCodes = Object.keys(state.balances)
-      .filter(pairCode => (pairCode !== 'BTC'));
+      .filter(assetCode => (assetCode !== 'BTC'));
     const pairCodes = assetCodes
       .map(assetCode => PairHelpers.getPair(assetCode, currencyCode));
+    const btcUsdtPairCode = PairHelpers.getPair('BTC', 'USDT');
+    pairCodes.push(btcUsdtPairCode);
     ExchangeHelpers.getTicker(state.authentication, pairCodes)
     .then(_tickers => {
       let tickers = {};

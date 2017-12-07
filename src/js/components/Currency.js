@@ -32,7 +32,10 @@ const Currency = ({
   />;
   assets.push(balance);
 
+  let totalBTCValue = 0;
+
   Object.keys(balances).forEach((assetCode, index) => {
+    totalBTCValue = totalBTCValue + balances[assetCode].btcValue;
     if (assetCode !== "BTC") {
       const pairCode = PairHelpers.getPair(assetCode, currencyCode);
       const balance = balances[assetCode];
@@ -58,10 +61,21 @@ const Currency = ({
     }
   });
 
+  let btcUsdtPairCode = PairHelpers.getPair('BTC', 'USDT');
+  let totalUSDValue = '...';
+  if (tickers[btcUsdtPairCode]) {
+    totalUSDValue = totalBTCValue * tickers[btcUsdtPairCode].last;
+  }
+
   return (
     <Paper>
       <List>
-        <Subheader>Portfolio</Subheader>
+        <Subheader>
+          <strong>BTC Value: </strong>
+          {totalBTCValue.toFixed(8)},
+          <strong> USDT Value: </strong>
+          ${totalUSDValue.toFixed(2)}
+        </Subheader>
         <ListItem
           primaryText={currencyCode}
           leftAvatar={<AssetIcons.Btc size={40} />}
