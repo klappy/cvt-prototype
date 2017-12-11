@@ -91,7 +91,7 @@ const Asset = ({
         secondaryText={
           <p>
             <span style={orderRecommendationStyle}><strong>{urgentOrder.type}:</strong> {signal + urgentOrder.btcValue.toFixed(8)}</span>,
-            <span> <strong>Target Yield: </strong>{settings.spread/2}%</span>
+            <span> <strong> Target: </strong>{settings.spread/2}%</span>
             <br />
             <strong>BTC Value:</strong> {balance.btcValue}
           </p>
