@@ -1,14 +1,16 @@
 import plnx from 'plnx';
 // import * as PairHelpers from './PairHelpers';
 
+export const urls = {
+  public: 'https://cvt-proxy.herokuapp.com/https://poloniex.com/public',
+  private: 'https://cvt-proxy.herokuapp.com/https://poloniex.com/tradingApi'
+};
+
 export const getBalances = (authentication) => {
   return new Promise( resolve => {
     let balances = {};
     let options = authentication;
-    options.urls = {
-      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
-      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
-    };
+    options.urls = urls;
     plnx.returnBalances(options)
     .then(_balances => {
       Object.keys(_balances).forEach(asset => {
@@ -27,10 +29,7 @@ export const getCompleteBalances = (authentication) => {
   return new Promise( resolve => {
     let balances = {};
     let options = authentication;
-    options.urls = {
-      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
-      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
-    };
+    options.urls = urls;
     plnx.returnCompleteBalances(options)
     .then(_balances => {
       Object.keys(_balances).forEach(asset => {
@@ -54,10 +53,7 @@ export const getCompleteBalances = (authentication) => {
 export const getTradeHistories = (authentication) => {
   return new Promise( resolve => {
     let options = authentication;
-    options.urls = {
-      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
-      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
-    };
+    options.urls = urls;
     options.currencyPair = 'all';
     plnx.returnTradeHistory(options)
     .then(_histories => {
@@ -86,10 +82,7 @@ export const getTradeHistories = (authentication) => {
 export const getOpenOrders = (authentication) => {
   return new Promise( resolve => {
     let options = authentication;
-    options.urls = {
-      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
-      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
-    };
+    options.urls = urls;
     options.currencyPair = 'all';
     plnx.returnOpenOrders(options)
     .then(_openOrders => {
@@ -119,10 +112,7 @@ export const getTicker = (authentication, pairs = []) => {
   return new Promise( resolve => {
     let ticker = {};
     let options = authentication;
-    options.urls = {
-      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
-      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
-    };
+    options.urls = urls;
     plnx.returnTicker(options)
     .then(_ticker => {
       pairs.forEach(pair => {
@@ -139,10 +129,7 @@ export const getTicker = (authentication, pairs = []) => {
 export const placeOrder = (authentication, order) => {
   return new Promise( (resolve, reject) => {
     let options = authentication;
-    options.urls = {
-      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
-      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
-    };
+    options.urls = urls;
     if (order.type === 'buy') {
       placeBuyOrder(authentication, order)
       .then(response => {
@@ -162,10 +149,7 @@ export const placeOrder = (authentication, order) => {
 export const placeBuyOrder = (authentication, order) => {
   return new Promise( resolve => {
     let options = authentication;
-    options.urls = {
-      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
-      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
-    };
+    options.urls = urls;
     options.currencyPair = order.currencyPair;
     options.rate = order.rate;
     options.amount = order.amount;
@@ -182,10 +166,7 @@ export const placeBuyOrder = (authentication, order) => {
 export const placeSellOrder = (authentication, order) => {
   return new Promise( resolve => {
     let options = authentication;
-    options.urls = {
-      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
-      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
-    };
+    options.urls = urls;
     options.currencyPair = order.currencyPair;
     options.rate = order.rate;
     options.amount = order.amount;
@@ -202,10 +183,7 @@ export const placeSellOrder = (authentication, order) => {
 export const cancelOrder = (authentication, orderNumber) => {
   return new Promise( resolve => {
     let options = authentication;
-    options.urls = {
-      public: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/public',
-      private: 'https://cors-anywhere.herokuapp.com/https://poloniex.com/tradingApi'
-    };
+    options.urls = urls;
     options.orderNumber = orderNumber;
     plnx.cancelOrder(options)
     .then(response => {
