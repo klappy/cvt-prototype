@@ -61,26 +61,32 @@ const Currency = ({
     }
   });
 
-  let btcUsdtPairCode = PairHelpers.getPair('BTC', 'USDT');
-  const usdtBtcTicker = tickers[btcUsdtPairCode];
-  let usdtBtcPrice;
-  if (usdtBtcTicker) {
-    usdtBtcPrice = tickers[btcUsdtPairCode].highestBid;
-  }
-  let totalUSDValue;
-  if (usdtBtcPrice) {
-    totalUSDValue = totalBTCValue * usdtBtcPrice;
+  let subheader = <div/>;
+  if (balances && tickers) {
+    let btcUsdtPairCode = PairHelpers.getPair('BTC', 'USDT');
+    const usdtBtcTicker = tickers[btcUsdtPairCode];
+    let usdtBtcPrice;
+    if (usdtBtcTicker) {
+      usdtBtcPrice = tickers[btcUsdtPairCode].last;
+    }
+    let totalUSDValue;
+    if (usdtBtcPrice) {
+      totalUSDValue = totalBTCValue * usdtBtcPrice;
+    }
+    subheader = (
+      <Subheader>
+      <strong>BTC/USD: </strong>
+      {totalBTCValue.toFixed(4)}<strong>/</strong>${(totalUSDValue) ? totalUSDValue.toFixed(2): ''},
+      <strong> USD/BTC: </strong>
+      ${usdtBtcPrice.toFixed(2)}
+      </Subheader>
+    );
   }
 
   return (
     <Paper>
       <List>
-        <Subheader>
-          <strong>BTC/USD: </strong>
-          {totalBTCValue.toFixed(4)}<strong>/</strong>${(totalUSDValue) ? totalUSDValue.toFixed(2): ''},
-          <strong> USD/BTC: </strong>
-          ${usdtBtcPrice.toFixed(2)}
-        </Subheader>
+        {subheader}
         <ListItem
           primaryText={currencyCode}
           leftAvatar={<AssetIcons.Btc size={40} />}
