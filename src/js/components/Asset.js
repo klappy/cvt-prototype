@@ -119,7 +119,7 @@ const Asset = ({
         leftAvatar={assetIcon}
         primaryText={
           <span>
-            {assetCode} - Last Trade {lastTrade}
+            {assetCode} - {lastTrade}
             <LinearProgress size={22} thickness={2.5} mode="determinate" color={progressColor} value={urgentOrder.percentToTrade*100} />
           </span>
         }
