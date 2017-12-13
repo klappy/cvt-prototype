@@ -104,7 +104,7 @@ const Asset = ({
     signal = '-';
   }
 
-  let lastTrade = "Never";
+  let lastTrade = "over 1 day ago";
   if (tradeHistory.length > 0) {
     const lastTradeTime = tradeHistory[0].date;
     const timeZoneOffset = (new Date()).getTimezoneOffset();
