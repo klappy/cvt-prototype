@@ -34,8 +34,9 @@ const Currency = ({
 
   let totalBTCValue = 0;
 
-  Object.keys(balances).forEach((assetCode, index) => {
+  const assetObjects = Object.keys(balances).map((assetCode) => {
     totalBTCValue = totalBTCValue + balances[assetCode].btcValue;
+    let asset;
     if (assetCode !== "BTC") {
       const pairCode = PairHelpers.getPair(assetCode, currencyCode);
       const balance = balances[assetCode];
@@ -44,20 +45,36 @@ const Currency = ({
       const tradeHistory = tradeHistories[pairCode] ? tradeHistories[pairCode] : [];
       const orders = openOrders[pairCode] ? openOrders[pairCode] : [];
 
-      if (balance && ticker) {
-        assets.push(
-          <Asset key={index}
-            assetCode={assetCode}
-            currencyCode={currencyCode}
-            settings={settings}
-            balance={balance}
-            ticker={ticker}
-            tradeHistory={tradeHistory}
-            orders={orders}
-            actions={actions}
-          />
-        );
-      }
+      asset = {
+        assetCode,
+        pairCode,
+        currencyCode,
+        settings,
+        balance,
+        ticker,
+        tradeHistory,
+        orders,
+        actions
+      };
+    }
+    return asset;
+  })
+  .slice().sort((a,b) => {
+    if (a.tradeHistory[0] && b.tradeHistory[0]) {
+      return b.tradeHistory[0].date < a.tradeHistory[0].date ? -1 : 1;
+    } else {
+      return 0;
+    }
+  });
+
+  assetObjects.forEach((asset, index) => {
+    if (asset && asset.balance && asset.ticker) {
+      assets.push(
+        <Asset
+          key={index}
+          {...asset}
+        />
+      );
     }
   });
 
