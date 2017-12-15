@@ -67,11 +67,11 @@ const Currency = ({
     }
   });
 
-  assetObjects.forEach((asset, index) => {
+  assetObjects.forEach((asset) => {
     if (asset && asset.balance && asset.ticker) {
       assets.push(
         <Asset
-          key={index}
+          key={asset.assetCode}
           {...asset}
         />
       );
