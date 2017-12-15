@@ -1,29 +1,34 @@
+import * as OrderHelpers from './OrderHelpers';
 
 export const getPair = (assetCode, currencyCode) => {
   return currencyCode + '_' + assetCode;
 };
 
-export const getTargetBuyOrder = (assetCode, currencyCode, balance, ticker, settings) => {
+export const getTargetBuyOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, settings) => {
+  const type = 'buy';
   const assetBalance = balance.available + balance.onOrders;
-  const rate = getTargetBuyRate(settings.target, assetBalance, settings.spread);
-  const amount = getTargetBuyAmount(settings.target, assetBalance, settings.spread);
-  const order = getOrder('buy', assetCode, currencyCode, rate, amount);
+  const targetYield = OrderHelpers.targetYield(settings.spread, type, tradeHistory);
+  const rate = getTargetBuyRate(settings.target, assetBalance, targetYield);
+  const amount = getTargetBuyAmount(settings.target, assetBalance, targetYield);
+  const order = getOrder(type, assetCode, currencyCode, rate, amount, targetYield);
   return order;
 };
 
-export const getTargetSellOrder = (assetCode, currencyCode, balance, ticker, settings) => {
+export const getTargetSellOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, settings) => {
+  const type = 'sell';
   const assetBalance = balance.available + balance.onOrders;
-  const rate = getTargetSellRate(settings.target, assetBalance, settings.spread);
-  const amount = getTargetSellAmount(settings.target, assetBalance, settings.spread);
-  const order = getOrder('sell', assetCode, currencyCode, rate, amount);
+  const targetYield = OrderHelpers.targetYield(settings.spread, type, tradeHistory);
+  const rate = getTargetSellRate(settings.target, assetBalance, targetYield);
+  const amount = getTargetSellAmount(settings.target, assetBalance, targetYield);
+  const order = getOrder(type, assetCode, currencyCode, rate, amount, targetYield);
   return order;
 };
 
-export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, settings) => {
+export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, settings) => {
   const urgentBuyOrder = getUrgentBuyOrder(assetCode, currencyCode, balance, ticker, settings);
   const urgentSellOrder = getUrgentSellOrder(assetCode, currencyCode, balance, ticker, settings);
-  const targetBuyOrder = getTargetBuyOrder(assetCode, currencyCode, balance, ticker, settings);
-  const targetSellOrder = getTargetSellOrder(assetCode, currencyCode, balance, ticker, settings);
+  const targetBuyOrder = getTargetBuyOrder(assetCode, currencyCode, balance, ticker, tradeHistory, settings);
+  const targetSellOrder = getTargetSellOrder(assetCode, currencyCode, balance, ticker, tradeHistory, settings);
   const targetDelta = Math.abs(balance.btcValue - settings.target);
   const holdAmount = targetDelta/ticker.last;
   const denominator = Math.max(targetBuyOrder.btcValue, targetSellOrder.btcValue);
@@ -34,6 +39,9 @@ export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, setting
   });
   if (highestOrder.btcValue > 0.0001) order = highestOrder;
   order.percentToTrade = percentToTrade;
+  [targetBuyOrder, targetSellOrder].forEach(_order => {
+    if (_order.type === highestOrder.type) order.targetYield = _order.targetYield;
+  });
   return order;
 };
 
@@ -53,26 +61,27 @@ export const getUrgentSellOrder = (assetCode, currencyCode, balance, ticker, set
   return order;
 };
 
-export const getOrder = (type, assetCode, currencyCode, rate, amount) => {
+export const getOrder = (type, assetCode, currencyCode, rate, amount, targetYield) => {
   const btcValue = amount * rate;
   return {
     currencyPair: getPair(assetCode, currencyCode),
     rate,
     amount,
     btcValue,
+    targetYield,
     type
   };
 };
 
-export const getTargetBuyRate = (targetValue, assetBalance, spread) => {
+export const getTargetBuyRate = (targetValue, assetBalance, targetYield) => {
   const targetRate = getTargetRate(targetValue, assetBalance);
-  const targetBuyRate = targetRate - (targetRate * spread/100/2);
+  const targetBuyRate = targetRate - (targetRate * targetYield/100);
   return targetBuyRate;
 };
 
-export const getTargetSellRate = (targetValue, assetBalance, spread) => {
+export const getTargetSellRate = (targetValue, assetBalance, targetYield) => {
   const targetRate = getTargetRate(targetValue, assetBalance);
-  const targetSellRate = targetRate + (targetRate * spread/100/2);
+  const targetSellRate = targetRate + (targetRate * targetYield/100);
   return targetSellRate;
 };
 
@@ -80,16 +89,16 @@ export const getTargetRate = (targetValue, assetBalance) => {
   return targetValue/assetBalance;
 };
 
-export const getTargetBuyAmount = (targetValue, assetBalance, spread) => {
-  const btcAmount = targetValue * spread/100/2 + 0.000001;
-  const rate = getTargetBuyRate(targetValue, assetBalance, spread);
+export const getTargetBuyAmount = (targetValue, assetBalance, targetYield) => {
+  const btcAmount = targetValue * targetYield/100 + 0.000001;
+  const rate = getTargetBuyRate(targetValue, assetBalance, targetYield);
   const amount = btcAmount / rate;
   return amount;
 };
 
-export const getTargetSellAmount = (targetValue, assetBalance, spread) => {
-  const btcAmount = targetValue * spread/100/2 + 0.000001;
-  const rate = getTargetSellRate(targetValue, assetBalance, spread);
+export const getTargetSellAmount = (targetValue, assetBalance, targetYield) => {
+  const btcAmount = targetValue * targetYield/100 + 0.000001;
+  const rate = getTargetSellRate(targetValue, assetBalance, targetYield);
   const amount = btcAmount / rate;
   return amount;
 };

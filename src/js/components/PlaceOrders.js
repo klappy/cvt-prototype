@@ -26,10 +26,10 @@ export default class PlaceOrders extends React.Component {
   };
 
   render() {
-    const {assetCode, currencyCode, balance, ticker, settings, ...otherProps} = this.props;
+    const {assetCode, currencyCode, balance, ticker, tradeHistory, settings, ...otherProps} = this.props;
 
-    const buyOrder = PairHelpers.getTargetBuyOrder(assetCode, currencyCode, balance, ticker, settings);
-    const sellOrder = PairHelpers.getTargetSellOrder(assetCode, currencyCode, balance, ticker, settings);
+    const buyOrder = PairHelpers.getTargetBuyOrder(assetCode, currencyCode, balance, ticker, tradeHistory, settings);
+    const sellOrder = PairHelpers.getTargetSellOrder(assetCode, currencyCode, balance, ticker, tradeHistory, settings);
 
     const actionButtons = [
       <FlatButton
@@ -74,6 +74,7 @@ PlaceOrders.propTypes = {
   currencyCode: PropTypes.string.isRequired,
   balance: PropTypes.object.isRequired,
   ticker: PropTypes.object.isRequired,
+  tradeHistory: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 };

@@ -27,7 +27,7 @@ const Asset = ({
   orders,
   actions
 }) => {
-  const urgentOrder = PairHelpers.getUrgentOrder(assetCode, currencyCode, balance, ticker, settings);
+  const urgentOrder = PairHelpers.getUrgentOrder(assetCode, currencyCode, balance, ticker, tradeHistory, settings);
 
   let orderRecommendationStyle = {};
   if (urgentOrder.type === 'sell') orderRecommendationStyle.color = 'rgb(0, 188, 212)';
@@ -39,6 +39,7 @@ const Asset = ({
       currencyCode={currencyCode}
       balance={balance}
       ticker={ticker}
+      tradeHistory={tradeHistory}
       settings={settings}
       actions={actions}
     />,
@@ -135,7 +136,9 @@ const Asset = ({
         secondaryText={
           <p>
             <span style={orderRecommendationStyle}><strong>{urgentOrder.type}:</strong> {signal + urgentOrder.btcValue.toFixed(8)}</span>,
-            <span> <strong> Target: </strong>{settings.spread/2}%</span>
+            <span> <strong> Target: </strong>
+              {urgentOrder.targetYield}%
+            </span>
             <br />
             <strong>BTC Value:</strong> {balance.btcValue}
           </p>
