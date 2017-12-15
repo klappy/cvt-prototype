@@ -61,8 +61,8 @@ class AppContainer extends React.Component {
             iconElementLeft={authenticationButton}
           />
           {currency}
-          <ReactInterval timeout={10000} enabled={true} callback={() => { this.updateBalancesAndTickers() }} />
-          <ReactInterval timeout={20000} enabled={true} callback={() => { this.updateOrdersAndTrades() }} />
+          <ReactInterval timeout={5000} enabled={true} callback={() => { this.updateBalancesAndTickers() }} />
+          <ReactInterval timeout={10000} enabled={true} callback={() => { this.updateOrdersAndTrades() }} />
         </div>
       </MuiThemeProvider>
     );
