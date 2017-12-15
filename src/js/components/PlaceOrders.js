@@ -30,7 +30,6 @@ export default class PlaceOrders extends React.Component {
 
     const buyOrder = PairHelpers.getTargetBuyOrder(assetCode, currencyCode, balance, ticker, settings);
     const sellOrder = PairHelpers.getTargetSellOrder(assetCode, currencyCode, balance, ticker, settings);
-    const urgentOrder = PairHelpers.getUrgentOrder(assetCode, currencyCode, balance, ticker, settings);
 
     const actionButtons = [
       <FlatButton
@@ -58,9 +57,6 @@ export default class PlaceOrders extends React.Component {
           modal={false}
           autoScrollBodyContent={true}
         >
-          <Divider />
-          <Subheader>Place an Urgent Order.</Subheader>
-          <PlaceOrder actions={this.props.actions} key="urgent" order={urgentOrder} />
           <Divider />
           <Subheader>Place a Buy Order for when the price goes lower.</Subheader>
           <PlaceOrder actions={this.props.actions} key="buy" order={buyOrder} />

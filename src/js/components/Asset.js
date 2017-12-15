@@ -86,7 +86,16 @@ const Asset = ({
             badgeStyle={{top: 31, right: -15, background: 'transparent'}}
             style={{padding: 0}}
           >
-            <AssetIcon size={40} color={assetIconColor} />
+            <AssetIcon
+              size={40}
+              color={assetIconColor}
+              onClick={(e) => {
+                if (urgentOrder.type !== 'hold') {
+                  actions.placeOrder(urgentOrder);
+                }
+                e.stopPropagation();
+              }}
+            />
           </Badge>
         </Badge>
       </Badge>
