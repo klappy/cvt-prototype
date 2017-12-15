@@ -34,12 +34,12 @@ export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, tradeHi
   var highestOrder = [urgentBuyOrder, urgentSellOrder].reduce(function(a, b) {
     return a.btcValue > b.btcValue ? a : b;
   });
+  let order = getOrder('hold', assetCode, currencyCode, ticker.last, holdAmount);
   if (highestOrder.btcValue > 0.0001) order = highestOrder;
   const denominator = [targetBuyOrder, targetSellOrder].filter(_order => {
     return _order.type === highestOrder.type;
   })[0].btcValue;
   const percentToTrade = targetDelta/denominator;
-  let order = getOrder('hold', assetCode, currencyCode, ticker.last, holdAmount);
   order.percentToTrade = percentToTrade;
   [targetBuyOrder, targetSellOrder].forEach(_order => {
     if (_order.type === highestOrder.type) order.targetYield = _order.targetYield;
