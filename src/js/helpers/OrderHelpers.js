@@ -8,8 +8,7 @@
  */
 export const targetYield = (spread, type, tradeHistory) => {
   const consecutive = lastConsecutive(tradeHistory, type);
-  const ratio = typeRatio(tradeHistory, type);
-  let targetYield = spread/2 * ratio + consecutive;
+  let targetYield = spread/2 + consecutive;
   targetYield = parseFloat(targetYield.toFixed(2));
   targetYield = Math.max(targetYield, 2);
   return targetYield;
