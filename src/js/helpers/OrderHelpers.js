@@ -9,7 +9,7 @@
 export const targetYield = (spread, type, tradeHistory) => {
   const consecutive = lastConsecutive(tradeHistory, type);
   const average = typeConsecutiveAverage(tradeHistory, type);
-  let targetYield = spread/2 + (average + consecutive)/2;
+  let targetYield = spread/2 + (average - consecutive)/2;
   targetYield = parseFloat(targetYield.toFixed(2));
   targetYield = Math.max(targetYield, 2);
   return targetYield;
@@ -23,7 +23,8 @@ export const lastConsecutive = (tradeHistory, type) => {
   tradeHistory.forEach(trade => {
     if (consecutive && trade.type === type) {
       count ++;
-    } else {
+    }
+    if (trade.type === type) {
       consecutive = false;
     }
   });
