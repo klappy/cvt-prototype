@@ -58,11 +58,11 @@ export default class PlaceOrders extends React.Component {
           autoScrollBodyContent={true}
         >
           <Divider />
-          <Subheader>Place a Buy Order for when the price goes lower.</Subheader>
-          <PlaceOrder actions={this.props.actions} key="buy" order={buyOrder} />
-          <Divider />
           <Subheader>Place a Sell Order for when the price goes higher.</Subheader>
           <PlaceOrder actions={this.props.actions} key="sell" order={sellOrder} />
+          <Divider />
+          <Subheader>Place a Buy Order for when the price goes lower.</Subheader>
+          <PlaceOrder actions={this.props.actions} key="buy" order={buyOrder} />
         </Dialog>
       </div>
     );
