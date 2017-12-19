@@ -92,14 +92,14 @@ export const getTargetRate = (targetValue, assetBalance) => {
 };
 
 export const getTargetBuyAmount = (targetValue, assetBalance, targetYield) => {
-  const btcAmount = targetValue * targetYield/100 + 0.000001;
+  const btcAmount = targetValue * targetYield/100;
   const rate = getTargetBuyRate(targetValue, assetBalance, targetYield);
   const amount = btcAmount / rate;
   return amount;
 };
 
 export const getTargetSellAmount = (targetValue, assetBalance, targetYield) => {
-  const btcAmount = targetValue * targetYield/100 + 0.000001;
+  const btcAmount = targetValue * targetYield/100;
   const rate = getTargetSellRate(targetValue, assetBalance, targetYield);
   const amount = btcAmount / rate;
   return amount;
