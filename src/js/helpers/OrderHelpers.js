@@ -8,7 +8,8 @@
  */
 export const targetYield = (spread, type, tradeHistory) => {
   const consecutive = lastConsecutive(tradeHistory, type);
-  let targetYield = spread/2 + consecutive;
+  const average = typeConsecutiveAverage(tradeHistory, type);
+  let targetYield = spread/2 + (average + consecutive)/2;
   targetYield = parseFloat(targetYield.toFixed(2));
   targetYield = Math.max(targetYield, 2);
   return targetYield;
@@ -29,14 +30,25 @@ export const lastConsecutive = (tradeHistory, type) => {
   return count;
 };
 /**
- * Description - gets ratio of history types
+ * Description - gets average consecutive
  * if type is buys: buys/sells and if sells: sells/buys
  */
-export const typeRatio = (tradeHistory, type) => {
-  const tradesOfType = typeFilter(tradeHistory, type);
-  const tradesOfOtherType = typeReject(tradeHistory, type);
-  const ratio = (tradesOfOtherType.length !== 0) ? tradesOfType.length/tradesOfOtherType.length : 1;
-  return ratio;
+export const typeConsecutiveAverage = (tradeHistory, type) => {
+  let consecutiveRuns = [];
+  let consecutiveRun = 0;
+  tradeHistory.forEach((trade, index) => {
+    let push = false;
+    if (trade.type === type) {
+      consecutiveRun ++;
+    } else {
+      push = true;
+    }
+    if (index === tradeHistory.length-1) push = true;
+    if (push) consecutiveRuns.push(consecutiveRun);
+  });
+  consecutiveRuns = consecutiveRuns.filter(int => int > 0);
+  const average = consecutiveRuns.reduce((p,c) => p + c, 0) / consecutiveRuns.length;
+  return average;
 };
 
 export const typeFilter = (orders, type) => orders.filter(o => o.type === type);
