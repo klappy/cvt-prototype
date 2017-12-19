@@ -91,21 +91,17 @@ export const placeOrder = (order) => {
   return ((dispatch, getState) => {
     const state = getState();
     ExchangeHelpers.placeOrder(state.authentication, order)
-    .then(response => {
-      const message = {
-        primaryText: 'Order Placed',
-        secondaryText: JSON.stringify(response)
-      };
-      dispatch(addMessage(message));
+    .then(() => {
       dispatch(updateBalances());
       dispatch(updateOpenOrders());
-    })
-    .catch(error => {
-      const message = {
-        primaryText: 'Order Placed',
-        secondaryText: JSON.stringify(error)
-      };
-      dispatch(addMessage(message));
+    });
+  });
+};
+
+export const placeOrders = (orders) => {
+  return ((dispatch) => {
+    orders.forEach(order => {
+      dispatch(placeOrder(order));
     });
   });
 };
@@ -115,20 +111,25 @@ export const cancelOrder = (order) => {
     const state = getState();
     ExchangeHelpers.cancelOrder(state.authentication, order.orderNumber)
     .then(() => {
-      const message = {
-        primaryText: order.currencyPair + ' Order Canceled',
-        secondaryText: 'Order Number: ' + order.orderNumber
-      };
-      dispatch(addMessage(message));
       dispatch(updateOpenOrders());
-    })
-    .catch(error => {
-      const message = {
-        primaryText: 'Order Placed',
-        secondaryText: JSON.stringify(error)
-      };
-      dispatch(addMessage(message));
     });
+  });
+};
+
+export const cancelPairOrders = (pairCode) => {
+  return ((dispatch, getState) => {
+    const state = getState();
+    const {openOrders} = state;
+    openOrders[pairCode].forEach(order => {
+      dispatch(cancelOrder(order));
+    });
+  });
+};
+
+export const replacePairOrders = (pairCode, orders) => {
+  return ((dispatch) => {
+    dispatch(cancelPairOrders(pairCode));
+    dispatch(placeOrders(orders));
   });
 };
 
