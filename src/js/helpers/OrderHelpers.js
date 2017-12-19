@@ -50,7 +50,10 @@ export const typeConsecutiveAverage = (tradeHistory, type) => {
     if (push) consecutiveRuns.push(consecutiveRun);
   });
   consecutiveRuns = consecutiveRuns.filter(int => int > 0);
-  const average = consecutiveRuns.reduce((p,c) => p + c, 0) / consecutiveRuns.length;
+  let average = 0;
+  if (consecutiveRuns.length > 0) {
+    average = consecutiveRuns.reduce((p,c) => p + c, 0) / consecutiveRuns.length;
+  }
   return average;
 };
 
