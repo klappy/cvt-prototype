@@ -87,13 +87,15 @@ export const updateTickers = () => {
   });
 };
 
-export const placeOrder = (order) => {
+export const placeOrder = (order, update=true) => {
   return ((dispatch, getState) => {
     const state = getState();
     ExchangeHelpers.placeOrder(state.authentication, order)
     .then(() => {
-      dispatch(updateBalances());
-      dispatch(updateOpenOrders());
+      if (update) {
+        dispatch(updateBalances());
+        dispatch(updateOpenOrders());
+      }
     });
   });
 };
@@ -101,17 +103,19 @@ export const placeOrder = (order) => {
 export const placeOrders = (orders) => {
   return ((dispatch) => {
     orders.forEach(order => {
-      dispatch(placeOrder(order));
+      dispatch(placeOrder(order, false));
     });
   });
 };
 
-export const cancelOrder = (order) => {
+export const cancelOrder = (order, update=true) => {
   return ((dispatch, getState) => {
     const state = getState();
     ExchangeHelpers.cancelOrder(state.authentication, order.orderNumber)
     .then(() => {
-      dispatch(updateOpenOrders());
+      if (update) {
+        dispatch(updateOpenOrders());
+      }
     });
   });
 };
@@ -121,7 +125,7 @@ export const cancelPairOrders = (pairCode) => {
     const state = getState();
     const {openOrders} = state;
     openOrders[pairCode].forEach(order => {
-      dispatch(cancelOrder(order));
+      dispatch(cancelOrder(order, false));
     });
   });
 };
@@ -130,6 +134,8 @@ export const replacePairOrders = (pairCode, orders) => {
   return ((dispatch) => {
     dispatch(cancelPairOrders(pairCode));
     dispatch(placeOrders(orders));
+    dispatch(updateOpenOrders());
+    dispatch(updateBalances());
   });
 };
 
