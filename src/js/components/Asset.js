@@ -60,7 +60,16 @@ const Asset = ({
   const historyBuyCount = tradeHistory.filter((o) => (o.type === 'buy')).length;
   const historySellCount = tradeHistory.filter((o) => (o.type === 'sell')).length;
 
-  const AssetIcon = AssetIcons[assetCode[0].toUpperCase() + assetCode.substring(1).replace(/\d+$/, "").toLowerCase()];
+  let assetIconCode;
+  switch (assetCode) {
+    case 'SC': {
+      assetIconCode = 'Sia';
+      break;
+    }
+    default:
+      assetIconCode = assetCode[0].toUpperCase() + assetCode.substring(1).replace(/\d+$/, "").toLowerCase();
+  }
+  let AssetIcon = AssetIcons[assetIconCode];
   const assetIconColor = orderRecommendationStyle.color ? orderRecommendationStyle.color : 'rgb(117, 117, 117)';
   const assetIcon = (
     <Badge
