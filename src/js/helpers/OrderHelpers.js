@@ -6,48 +6,58 @@
  * number of hours since last trade
  * dont let go too low, minimum trade size
  */
-export const targetYield = (spread, type, tradeHistory) => {
-  const consecutive = lastConsecutive(tradeHistory, type);
-  const average = typeConsecutiveAverage(tradeHistory, type);
-  let targetYield = spread/2 + Math.abs(average - consecutive);
+export const targetYield = (spread, type, tradeHistory, assetTargetBtcValue) => {
+  let targetYield;
+  const consecutiveBtc = lastConsecutiveBtc(tradeHistory, type);
+  const consecutiveYield = consecutiveBtc/assetTargetBtcValue*100;
+  const averageBtcValue = typeConsecutiveAverageBtc(tradeHistory, type);
+  const averageYield = averageBtcValue/assetTargetBtcValue*100;
+  if (consecutiveYield === 0) { // if this is the first trade in theis direction
+    targetYield = averageYield * 0.8;
+  } else if (averageYield > consecutiveYield) {
+    targetYield = averageYield - (consecutiveYield * 0.8);
+  } else { // consecutive is greatest, use that in case of flash crash or sky rocket
+    targetYield = consecutiveYield * 0.8;
+  }
   targetYield = parseFloat(targetYield.toFixed(2));
-  targetYield = Math.max(targetYield, 2);
+  targetYield = Math.max(targetYield, spread/2);
+// console.log(consecutiveBtc, consecutiveYield, averageBtcValue, averageYield, targetYield)
   return targetYield;
 };
  /**
   * Description - gets number of recent consecutive trades of type
   */
-export const lastConsecutive = (tradeHistory, type) => {
-  let count = 0;
+export const lastConsecutiveBtc = (tradeHistory, type) => {
+  let btc = 0;
   let consecutive = true;
   tradeHistory.forEach(trade => {
-    if (consecutive && trade.type === type) {
-      count ++;
-    }
-    if (trade.type === type) {
-      consecutive = true;
-    } else {
+    if (trade.type !== type) {
       consecutive = false;
+    } else {
+      if (consecutive) btc = btc + trade.total;
     }
   });
-  return count;
+  return btc;
 };
 /**
- * Description - gets average consecutive
+ * Description - gets average consecutive btcValue
  * if type is buys: buys/sells and if sells: sells/buys
  */
-export const typeConsecutiveAverage = (tradeHistory, type) => {
+export const typeConsecutiveAverageBtc = (tradeHistory, type) => {
   let consecutiveRuns = [];
-  let consecutiveRun = 0;
-  tradeHistory.forEach((trade, index) => {
+  let consecutiveBTC = 0;
+  tradeHistory.forEach((trade) => {
     let push = false;
     if (trade.type === type) {
-      consecutiveRun ++;
+      consecutiveBTC = consecutiveBTC + trade.total;
     } else {
       push = true;
     }
-    if (index === tradeHistory.length-1) push = true;
-    if (push) consecutiveRuns.push(consecutiveRun);
+    // if (index === tradeHistory.length-1) push = true; // don't include this in case first trade was buy-in
+    if (push) {
+      consecutiveRuns.push(consecutiveBTC);
+      consecutiveBTC = 0;
+    }
   });
   consecutiveRuns = consecutiveRuns.filter(int => int > 0);
   let average = 0;

@@ -82,7 +82,7 @@ const Currency = ({
   if (balances && tickers) {
     let btcUsdtPairCode = PairHelpers.getPair('BTC', 'USDT');
     const usdtBtcTicker = tickers[btcUsdtPairCode];
-    let usdtBtcPrice;
+    let usdtBtcPrice = 0;
     if (usdtBtcTicker) {
       usdtBtcPrice = tickers[btcUsdtPairCode].last;
     }

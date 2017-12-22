@@ -7,7 +7,7 @@ export const getPair = (assetCode, currencyCode) => {
 export const getTargetBuyOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, settings) => {
   const type = 'buy';
   const assetBalance = balance.available + balance.onOrders;
-  const targetYield = OrderHelpers.targetYield(settings.spread, type, tradeHistory);
+  const targetYield = OrderHelpers.targetYield(settings.spread, type, tradeHistory, settings.target);
   const rate = getTargetBuyRate(settings.target, assetBalance, targetYield);
   const amount = getTargetBuyAmount(settings.target, assetBalance, targetYield);
   const order = getOrder(type, assetCode, currencyCode, rate, amount, targetYield);
@@ -17,7 +17,7 @@ export const getTargetBuyOrder = (assetCode, currencyCode, balance, ticker, trad
 export const getTargetSellOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, settings) => {
   const type = 'sell';
   const assetBalance = balance.available + balance.onOrders;
-  const targetYield = OrderHelpers.targetYield(settings.spread, type, tradeHistory);
+  const targetYield = OrderHelpers.targetYield(settings.spread, type, tradeHistory, settings.target);
   const rate = getTargetSellRate(settings.target, assetBalance, targetYield);
   const amount = getTargetSellAmount(settings.target, assetBalance, targetYield);
   const order = getOrder(type, assetCode, currencyCode, rate, amount, targetYield);
