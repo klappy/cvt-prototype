@@ -13,11 +13,11 @@ export const targetYield = (spread, type, tradeHistory, assetTargetBtcValue) => 
   const averageBtcValue = typeConsecutiveAverageBtc(tradeHistory, type);
   const averageYield = averageBtcValue/assetTargetBtcValue*100;
   if (consecutiveYield === 0) { // if this is the first trade in theis direction
-    targetYield = averageYield * 0.8;
+    targetYield = averageYield/2;
   } else if (averageYield > consecutiveYield) {
-    targetYield = averageYield - (consecutiveYield * 0.8);
+    targetYield = averageYield - (consecutiveYield/2);
   } else { // consecutive is greatest, use that in case of flash crash or sky rocket
-    targetYield = consecutiveYield * 0.8;
+    targetYield = consecutiveYield/2;
   }
   targetYield = parseFloat(targetYield.toFixed(2));
   targetYield = Math.max(targetYield, spread/2);
