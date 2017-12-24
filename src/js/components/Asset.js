@@ -145,11 +145,11 @@ const Asset = ({
         secondaryText={
           <p>
             <span style={orderRecommendationStyle}><strong>{urgentOrder.type}:</strong> {signal + urgentOrder.btcValue.toFixed(8)}</span>,
-            <span> <strong> Target: </strong>
+            <span> <strong> Yield: </strong>
               {urgentOrder.targetYield}%
             </span>
             <br />
-            <strong>BTC Value:</strong> {balance.btcValue}
+            <strong>BTC Value:</strong> Ƀ{balance.btcValue}
           </p>
         }
         secondaryTextLines={2}

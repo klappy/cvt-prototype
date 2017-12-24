@@ -93,7 +93,7 @@ const Currency = ({
     subheader = (
       <Subheader>
       <strong>BTC/USD: </strong>
-      {totalBTCValue.toFixed(4)}<strong>/</strong>${(totalUSDValue) ? totalUSDValue.toFixed(2): ''},
+      Ƀ{totalBTCValue.toFixed(4)}<strong>/</strong>${(totalUSDValue) ? totalUSDValue.toFixed(2): ''},
       <strong> USD/BTC: </strong>
       ${usdtBtcPrice.toFixed(2)}
       </Subheader>
