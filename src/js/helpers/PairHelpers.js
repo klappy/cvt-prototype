@@ -51,7 +51,8 @@ export const getUrgentBuyOrder = (assetCode, currencyCode, balance, ticker, sett
   const rate = ticker.lowestAsk;
   let amount = getUrgentOrderAmount(settings.target, balance.btcValue, rate);
   amount = (amount < 0) ? Math.abs(amount) : 0;
-  const order = getOrder('buy', assetCode, currencyCode, rate, amount);
+  const currentYield = amount*rate/settings.target*100;
+  const order = getOrder('buy', assetCode, currencyCode, rate, amount, currentYield);
   return order;
 };
 
@@ -59,7 +60,8 @@ export const getUrgentSellOrder = (assetCode, currencyCode, balance, ticker, set
   const rate = ticker.highestBid;
   let amount = getUrgentOrderAmount(settings.target, balance.btcValue, rate);
   amount = (amount > 0) ? amount : 0;
-  const order = getOrder('sell', assetCode, currencyCode, rate, amount);
+  const currentYield = amount*rate/settings.target*100;
+  const order = getOrder('sell', assetCode, currencyCode, rate, amount, currentYield);
   return order;
 };
 
