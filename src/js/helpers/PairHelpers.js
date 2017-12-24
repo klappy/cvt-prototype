@@ -35,7 +35,7 @@ export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, tradeHi
     return a.btcValue > b.btcValue ? a : b;
   });
   let order = getOrder('hold', assetCode, currencyCode, ticker.last, holdAmount);
-  if (highestOrder.btcValue > 0.0001) order = highestOrder;
+  if (highestOrder.btcValue > 0.0001 && highestOrder.targetYield >= settings.minimumYield) order = highestOrder;
   const denominator = [targetBuyOrder, targetSellOrder].filter(_order => {
     return _order.type === highestOrder.type;
   })[0].btcValue;
