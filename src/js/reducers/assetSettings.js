@@ -3,7 +3,7 @@ import { UPDATE_ASSET_SETTINGS, SET_DEFAULT_ASSET_SETTINGS } from '../constants/
 const initialState = {
   default: {
     target: 0.005,
-    spread: 4
+    minimumYield: 2.1
   }
 };
 
@@ -14,20 +14,21 @@ export default function update(state = initialState, action) {
         ...state,
         [action.assetCode]: {
           target: action.target,
-          spread: action.spread
+          minimumYield: action.minimumYield
         }
       };
 
     case SET_DEFAULT_ASSET_SETTINGS:
       return {
         ...state,
-        [action.assetCode]: {
-          target: 0.01,
-          spread: 1
-        }
+        [action.assetCode]: initialState.default
       };
 
     default:
-      return state;
+      if (!state.default.minimumYield) {
+        return initialState;
+      } else {
+        return state;
+      }
   }
 }

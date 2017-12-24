@@ -1,12 +1,12 @@
 // import moment from 'moment';
 /**
- * Description - adjust spread for the following conditions
+ * Description - adjust minimumYield for the following conditions
  * increase for consecutive of the same type
  * multiply by ratio of order types
  * number of hours since last trade
  * dont let go too low, minimum trade size
  */
-export const targetYield = (spread, type, tradeHistory, assetTargetBtcValue) => {
+export const targetYield = (minimumYield, type, tradeHistory, assetTargetBtcValue) => {
   let targetYield;
   const consecutiveBtc = lastConsecutiveBtc(tradeHistory, type);
   const consecutiveYield = consecutiveBtc/assetTargetBtcValue*100;
@@ -20,7 +20,7 @@ export const targetYield = (spread, type, tradeHistory, assetTargetBtcValue) => 
     targetYield = consecutiveYield/2;
   }
   targetYield = parseFloat(targetYield.toFixed(2));
-  targetYield = Math.max(targetYield, spread/2);
+  targetYield = Math.max(targetYield, minimumYield);
 // console.log(consecutiveBtc, consecutiveYield, averageBtcValue, averageYield, targetYield)
   return targetYield;
 };

@@ -10,7 +10,7 @@ export default class AssetSettings extends React.Component {
   state = {
     open: false,
     target: this.props.settings.target,
-    secret: this.props.settings.spread
+    secret: this.props.settings.minimumYield
   };
 
   handleOpen = () => {
@@ -22,7 +22,7 @@ export default class AssetSettings extends React.Component {
   };
 
   updateAssetSettings = () => {
-    this.props.actions.updateAssetSettings(this.props.assetCode, this.state.target, this.state.spread);
+    this.props.actions.updateAssetSettings(this.props.assetCode, this.state.target, this.state.minimumYield);
     this.handleClose();
   };
 
@@ -31,9 +31,9 @@ export default class AssetSettings extends React.Component {
     this.setState({target});
   };
 
-  updateSpread = (event) => {
-    const spread = event.target.value;
-    this.setState({spread});
+  updateMinimumYield = (event) => {
+    const minimumYield = event.target.value;
+    this.setState({minimumYield});
   };
 
   render() {
@@ -79,10 +79,10 @@ export default class AssetSettings extends React.Component {
           />
           <TextField
             style={{width: '100%'}}
-            hintText="Set the Target Spread for round trip buy/sell."
-            floatingLabelText="Spread"
-            defaultValue={this.props.settings.spread}
-            onBlur={this.updateSpread}
+            hintText="Set the Minimum Yield for round each trade."
+            floatingLabelText="Minimum Yield"
+            defaultValue={this.props.settings.minimumYield}
+            onBlur={this.updateMinimumYield}
           />
         </Dialog>
       </div>

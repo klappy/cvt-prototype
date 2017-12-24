@@ -23,8 +23,8 @@ export const updateOrdersAndTrades = () => {
   });
 };
 
-export const updateAssetSettings = (assetCode, target, spread) => (
-  { type: types.UPDATE_ASSET_SETTINGS, assetCode, target, spread }
+export const updateAssetSettings = (assetCode, target, minimumYield) => (
+  { type: types.UPDATE_ASSET_SETTINGS, assetCode, target, minimumYield }
 );
 
 export const updateAuthentication = (key, secret) => (
