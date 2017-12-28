@@ -34,13 +34,11 @@ export const getCompleteBalances = (authentication) => {
     .then(_balances => {
       Object.keys(_balances).forEach(asset => {
         const balance = _balances[asset];
-        if (balance.btcValue > parseFloat(0)) {
-          balances[asset] = {
-            available: parseFloat(balance.available),
-            onOrders: parseFloat(balance.onOrders),
-            btcValue: parseFloat(balance.btcValue)
-          };
-        }
+        balances[asset] = {
+          available: parseFloat(balance.available),
+          onOrders: parseFloat(balance.onOrders),
+          btcValue: parseFloat(balance.btcValue)
+        };
       });
       resolve(balances);
     })
@@ -115,10 +113,14 @@ export const getTicker = (authentication, pairs = []) => {
     options.urls = urls;
     plnx.returnTicker(options)
     .then(_ticker => {
-      pairs.forEach(pair => {
-        ticker[pair] = _ticker[pair];
-      });
-      resolve(ticker);
+      if (pairs.length === 0) {
+        resolve(_ticker);
+      } else {
+        pairs.forEach(pair => {
+          ticker[pair] = _ticker[pair];
+        });
+        resolve(ticker);
+      }
     })
     .catch(error => {
       // console.warn(error);

@@ -55,11 +55,7 @@ export default class PlaceOrders extends React.Component {
           primaryText="Place Orders"
           onClick={this.handleOpen}
           rightIconButton={
-            <IconButton
-              touch={true}
-              tooltip="Replace Orders"
-              tooltipPosition="bottom-left"
-            >
+            <IconButton>
               <Repeat
                 onClick={() => {
                   this.replacePairOrders([sellOrder, buyOrder]);

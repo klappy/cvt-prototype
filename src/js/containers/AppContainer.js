@@ -38,10 +38,24 @@ class AppContainer extends React.Component {
       <Messages actions={this.props.actions} messages={this.props.messages} />
     );
 
-    let currency = <div />;
-    if (this.props.balances['BTC']) {
-      currency = <Currency
-        currencyCode="BTC"
+    let {balances, tickers} = this.props;
+
+    let assetsOfCurrencies = {};
+    Object.keys(tickers).forEach(pairCode => {
+      const currencyCode = pairCode.split('_')[0];
+      const assetCode = pairCode.split('_')[1];
+      if (balances[currencyCode]) {
+        if (!assetsOfCurrencies[currencyCode]) assetsOfCurrencies[currencyCode] = [];
+        if (balances[assetCode] && balances[assetCode].btcValue > 0) assetsOfCurrencies[currencyCode].push(assetCode);
+      }
+    });
+
+    let currencies = [];
+    Object.keys(assetsOfCurrencies).forEach(currencyCode => {
+      const assetCodes = assetsOfCurrencies[currencyCode];
+      currencies.push(<Currency key={currencyCode}
+        currencyCode={currencyCode}
+        assetCodes={assetCodes}
         actions={this.props.actions}
         authentication={this.props.authentication}
         assetSettings={this.props.assetSettings}
@@ -49,8 +63,8 @@ class AppContainer extends React.Component {
         tickers={this.props.tickers}
         tradeHistories={this.props.tradeHistories}
         openOrders={this.props.openOrders}
-      />;
-    }
+        />);
+    });
 
     return (
       <MuiThemeProvider>
@@ -60,7 +74,7 @@ class AppContainer extends React.Component {
             iconElementRight={messagesButton}
             iconElementLeft={authenticationButton}
           />
-          {currency}
+          {currencies}
           <ReactInterval timeout={6000} enabled={true} callback={() => { this.updateBalancesAndTickers() }} />
           <ReactInterval timeout={9000} enabled={true} callback={() => { this.updateOrdersAndTrades() }} />
         </div>

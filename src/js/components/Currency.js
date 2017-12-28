@@ -10,6 +10,7 @@ import * as PairHelpers from '../helpers/PairHelpers';
 
 const Currency = ({
   currencyCode,
+  assetCodes,
   assetSettings,
   balances,
   tickers,
@@ -18,45 +19,42 @@ const Currency = ({
   actions
 }) => {
   const assets = [];
-
   const balance = <ListItem key="balance"
     primaryText="Balance"
     secondaryText={
       <p>
-        <strong>Available</strong>: {balances.BTC.available}
+        <strong>Available</strong>: {balances[currencyCode].available}
         <br/>
-        <strong> On Orders</strong>: {balances.BTC.onOrders}
+        <strong> On Orders</strong>: {balances[currencyCode].onOrders}
       </p>
     }
     secondaryTextLines={2}
   />;
   assets.push(balance);
 
-  let totalBTCValue = 0;
+  let totalBTCValue = balances[currencyCode].btcValue;
 
-  const assetObjects = Object.keys(balances).map((assetCode) => {
+  const assetObjects = assetCodes.map((assetCode) => {
     totalBTCValue = totalBTCValue + balances[assetCode].btcValue;
     let asset;
-    if (assetCode !== "BTC") {
-      const pairCode = PairHelpers.getPair(assetCode, currencyCode);
-      const balance = balances[assetCode];
-      const ticker = tickers[pairCode];
-      const settings = assetSettings[assetCode] ? assetSettings[assetCode] : assetSettings.default;
-      const tradeHistory = tradeHistories[pairCode] ? tradeHistories[pairCode] : [];
-      const orders = openOrders[pairCode] ? openOrders[pairCode] : [];
+    const pairCode = PairHelpers.getPair(assetCode, currencyCode);
+    const balance = balances[assetCode];
+    const ticker = tickers[pairCode];
+    const settings = assetSettings[assetCode] ? assetSettings[assetCode] : assetSettings.default;
+    const tradeHistory = tradeHistories[pairCode] ? tradeHistories[pairCode] : [];
+    const orders = openOrders[pairCode] ? openOrders[pairCode] : [];
 
-      asset = {
-        assetCode,
-        pairCode,
-        currencyCode,
-        settings,
-        balance,
-        ticker,
-        tradeHistory,
-        orders,
-        actions
-      };
-    }
+    asset = {
+      assetCode,
+      pairCode,
+      currencyCode,
+      settings,
+      balance,
+      ticker,
+      tradeHistory,
+      orders,
+      actions
+    };
     return asset;
   })
   .slice().sort((a,b) => {
@@ -78,27 +76,44 @@ const Currency = ({
     }
   });
 
+  let currencyUnicode;
+  switch (currencyCode) {
+    case 'BTC':
+      currencyUnicode = 'Ƀ';
+      break;
+    case 'ETH':
+      currencyUnicode = 'Ξ';
+      break;
+    case 'XMR':
+      currencyUnicode = 'ɱ';
+      break;
+    default:
+     currencyUnicode = '';
+  }
   let subheader = <div/>;
   if (balances && tickers) {
-    let btcUsdtPairCode = PairHelpers.getPair('BTC', 'USDT');
-    const usdtBtcTicker = tickers[btcUsdtPairCode];
-    let usdtBtcPrice = 0;
-    if (usdtBtcTicker) {
-      usdtBtcPrice = tickers[btcUsdtPairCode].last;
+    let currencyUsdtPairCode = PairHelpers.getPair(currencyCode, 'USDT');
+    const usdtCurrencyTicker = tickers[currencyUsdtPairCode];
+    let usdtCurrencyPrice = 0;
+    if (usdtCurrencyTicker) {
+      usdtCurrencyPrice = tickers[currencyUsdtPairCode].last;
     }
     let totalUSDValue;
-    if (usdtBtcPrice) {
-      totalUSDValue = totalBTCValue * usdtBtcPrice;
+    if (usdtCurrencyPrice) {
+      totalUSDValue = totalBTCValue * usdtCurrencyPrice;
     }
     subheader = (
       <Subheader>
-      <strong>BTC/USD: </strong>
-      Ƀ{totalBTCValue.toFixed(4)}<strong>/</strong>${(totalUSDValue) ? totalUSDValue.toFixed(2): ''},
-      <strong> USD/BTC: </strong>
-      ${usdtBtcPrice.toFixed(2)}
+      <strong>{currencyCode}/USD: </strong>
+      {currencyUnicode}{totalBTCValue.toFixed(4)}<strong>/</strong>${(totalUSDValue) ? totalUSDValue.toFixed(2): ''},
+      <strong> USD/{currencyCode}: </strong>
+      ${usdtCurrencyPrice.toFixed(2)}
       </Subheader>
     );
   }
+
+  const iconCode = currencyCode[0].toUpperCase() + currencyCode.substring(1).toLowerCase();
+  const AssetIcon = AssetIcons[iconCode];
 
   return (
     <Paper>
@@ -106,7 +121,7 @@ const Currency = ({
         {subheader}
         <ListItem
           primaryText={currencyCode}
-          leftAvatar={<AssetIcons.Btc size={40} />}
+          leftAvatar={<AssetIcon size={40} />}
           initiallyOpen={true}
           primaryTogglesNestedList={true}
           nestedItems={assets}
@@ -118,6 +133,7 @@ const Currency = ({
 
 Currency.propTypes = {
   currencyCode: PropTypes.string.isRequired,
+  assetCodes: PropTypes.array.isRequired,
   assetSettings: PropTypes.object.isRequired,
   balances: PropTypes.object.isRequired,
   tickers: PropTypes.object.isRequired,
