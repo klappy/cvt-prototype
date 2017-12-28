@@ -34,8 +34,18 @@ export const updateAuthentication = (key, secret) => (
 export const updateBalances = () => {
   return ((dispatch, getState) => {
     const state = getState();
+    const {tickers} = state;
     ExchangeHelpers.getCompleteBalances(state.authentication)
     .then(balances => {
+      const usdtBtcTicker = tickers['USDT_BTC'];
+      if (usdtBtcTicker) {
+        let _balances = {};
+        Object.keys(balances).forEach(pairCode => {
+          let balance = balances[pairCode];
+          balance.usdtValue = (balance.btcValue * usdtBtcTicker.last).toFixed(2);
+          _balances[pairCode] = balance;
+        });
+      }
       dispatch({ type: types.UPDATE_BALANCES, balances });
     });
   });
@@ -64,14 +74,7 @@ export const updateOpenOrders = () => {
 export const updateTickers = () => {
   return ((dispatch, getState) => {
     const state = getState();
-    const currencyCode = 'BTC';
-    const assetCodes = Object.keys(state.balances)
-      .filter(assetCode => (assetCode !== 'BTC'));
-    const pairCodes = assetCodes
-      .map(assetCode => PairHelpers.getPair(assetCode, currencyCode));
-    const btcUsdtPairCode = PairHelpers.getPair('BTC', 'USDT');
-    pairCodes.push(btcUsdtPairCode);
-    ExchangeHelpers.getTicker(state.authentication, pairCodes)
+    ExchangeHelpers.getTicker(state.authentication)
     .then(_tickers => {
       let tickers = {};
       Object.keys(_tickers).forEach(pairCode => {
