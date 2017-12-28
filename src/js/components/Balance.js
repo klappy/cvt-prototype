@@ -7,7 +7,6 @@ const Balance = ({
   balance,
   ...otherProps
 }) => {
-
   return (
     <ListItem
       {...otherProps}
@@ -17,7 +16,7 @@ const Balance = ({
           <strong>Available</strong>: {balance.available.toFixed(2)},
           <strong> Orders</strong>: {balance.onOrders.toFixed(8)}
           <br/>
-          <strong>BTC Value</strong>: {balance.btcValue.toFixed(8)}
+          <strong>Value</strong>: Ƀ{balance.btcValue.toFixed(8)} | ${balance.usdtValue}
         </p>
       }
       secondaryTextLines={2}
