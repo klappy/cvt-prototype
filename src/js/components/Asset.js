@@ -153,7 +153,8 @@ const Asset = ({
               {urgentOrder.targetYield}%
             </span>
             <br />
-            <strong>Value:</strong> Ƀ{balance.btcValue} | ${balance.usdtValue}
+            <strong>Value:</strong> Ƀ{balance.btcValue.toFixed(8)} |
+             ${balance.usdtValue ? balance.usdtValue.toFixed(2): 0}
           </p>
         }
         secondaryTextLines={2}

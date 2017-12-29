@@ -46,7 +46,7 @@ class AppContainer extends React.Component {
       const assetCode = pairCode.split('_')[1];
       if (balances[currencyCode]) {
         if (!assetsOfCurrencies[currencyCode]) assetsOfCurrencies[currencyCode] = [];
-        if (balances[assetCode] && balances[assetCode].btcValue > 0) assetsOfCurrencies[currencyCode].push(assetCode);
+        if (balances[assetCode] && balances[assetCode].available > 0) assetsOfCurrencies[currencyCode].push(assetCode);
       }
     });
 
@@ -63,7 +63,7 @@ class AppContainer extends React.Component {
         tickers={this.props.tickers}
         tradeHistories={this.props.tradeHistories}
         openOrders={this.props.openOrders}
-        />);
+      />);
     });
 
     return (

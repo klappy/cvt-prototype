@@ -90,7 +90,7 @@ PlaceOrders.propTypes = {
   currencyCode: PropTypes.string.isRequired,
   balance: PropTypes.object.isRequired,
   ticker: PropTypes.object.isRequired,
-  tradeHistory: PropTypes.object.isRequired,
+  tradeHistory: PropTypes.array.isRequired,
   settings: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 };

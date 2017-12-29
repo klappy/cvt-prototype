@@ -32,13 +32,8 @@ export const getCompleteBalances = (authentication) => {
     options.urls = urls;
     plnx.returnCompleteBalances(options)
     .then(_balances => {
-      Object.keys(_balances).forEach(asset => {
-        const balance = _balances[asset];
-        balances[asset] = {
-          available: parseFloat(balance.available),
-          onOrders: parseFloat(balance.onOrders),
-          btcValue: parseFloat(balance.btcValue)
-        };
+      Object.keys(_balances).forEach(assetCode => {
+        balances[assetCode] = parseFloatObject(_balances[assetCode]);
       });
       resolve(balances);
     })
@@ -68,6 +63,7 @@ export const getTradeHistories = (authentication) => {
           return trade;
         });
         histories[pairCode] = trades;
+        if (pairCode === 'USDT_BTC') histories['BTC_USDT'] = trades;
       });
       resolve(histories);
     })
@@ -106,26 +102,46 @@ export const getOpenOrders = (authentication) => {
   });
 };
 
-export const getTicker = (authentication, pairs = []) => {
+export const getTicker = (authentication) => {
   return new Promise( resolve => {
-    let ticker = {};
+    let tickers = {};
     let options = authentication;
     options.urls = urls;
     plnx.returnTicker(options)
-    .then(_ticker => {
-      if (pairs.length === 0) {
-        resolve(_ticker);
-      } else {
-        pairs.forEach(pair => {
-          ticker[pair] = _ticker[pair];
-        });
-        resolve(ticker);
-      }
+    .then(_tickers => {
+      Object.keys(_tickers).forEach(pairCode => {
+        tickers[pairCode] = parseFloatObject(_tickers[pairCode]);
+      });
+      const usdtBtcTicker = _tickers['USDT_BTC'];
+      const btcUsdtTicker = invertTicker(usdtBtcTicker);
+      tickers['BTC_USDT'] = btcUsdtTicker;
+      resolve(tickers);
     })
     .catch(error => {
       // console.warn(error);
     });
   });
+};
+
+export const parseFloatObject = (object) => {
+  let _object = {};
+  Object.keys(object).forEach(key => {
+    _object[key] = parseFloat(object[key]);
+  });
+  return _object;
+};
+
+export const invertTicker = (ticker) => {
+  const {last, lowestAsk, highestBid, percentChange, baseVolume, quoteVolume} = ticker;
+  const _ticker = {
+    last: 1/last,
+    lowestAsk: 1/lowestAsk,
+    highestBid: 1/highestBid,
+    percentChange,
+    baseVolume,
+    quoteVolume
+  };
+  return _ticker;
 };
 
 export const placeOrder = (authentication, order) => {

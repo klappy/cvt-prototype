@@ -1,6 +1,5 @@
 import * as types from '../constants/ActionTypes';
 import * as ExchangeHelpers from '../helpers/ExchangeHelpers';
-import * as PairHelpers from '../helpers/PairHelpers';
 
 export const updateAll = () => {
   return ((dispatch) => {
@@ -40,10 +39,15 @@ export const updateBalances = () => {
       const usdtBtcTicker = tickers['USDT_BTC'];
       if (usdtBtcTicker) {
         let _balances = {};
-        Object.keys(balances).forEach(pairCode => {
-          let balance = balances[pairCode];
-          balance.usdtValue = (balance.btcValue * usdtBtcTicker.last).toFixed(2);
-          _balances[pairCode] = balance;
+        Object.keys(balances).forEach(assetCode => {
+          let balance = balances[assetCode];
+          if (assetCode === 'USDT') {
+            balance.btcValue = (balance.available / usdtBtcTicker.last);
+            balance.usdtValue = balance.available;
+          } else {
+            balance.usdtValue = (balance.btcValue * usdtBtcTicker.last);
+          }
+          _balances[assetCode] = balance;
         });
       }
       dispatch({ type: types.UPDATE_BALANCES, balances });
