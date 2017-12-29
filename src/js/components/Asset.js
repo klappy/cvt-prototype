@@ -66,6 +66,10 @@ const Asset = ({
       assetIconCode = 'Sia';
       break;
     }
+    case 'NAV': {
+      assetIconCode = 'Nvc';
+      break;
+    }
     default:
       assetIconCode = assetCode[0].toUpperCase() + assetCode.substring(1).replace(/\d+$/, "").toLowerCase();
   }
@@ -149,7 +153,7 @@ const Asset = ({
               {urgentOrder.targetYield}%
             </span>
             <br />
-            <strong>BTC Value:</strong> Ƀ{balance.btcValue}
+            <strong>Value:</strong> Ƀ{balance.btcValue} | ${balance.usdtValue}
           </p>
         }
         secondaryTextLines={2}
