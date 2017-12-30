@@ -42,8 +42,8 @@ export const updateBalances = () => {
         Object.keys(balances).forEach(assetCode => {
           let balance = balances[assetCode];
           if (assetCode === 'USDT') {
-            balance.btcValue = (balance.available / usdtBtcTicker.last);
-            balance.usdtValue = balance.available;
+            balance.btcValue = (balance.available + balance.onOrders) / usdtBtcTicker.last;
+            balance.usdtValue = (balance.available + balance.onOrders);
           } else {
             balance.usdtValue = (balance.btcValue * usdtBtcTicker.last);
           }

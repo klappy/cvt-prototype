@@ -63,7 +63,10 @@ export const getTradeHistories = (authentication) => {
           return trade;
         });
         histories[pairCode] = trades;
-        if (pairCode === 'USDT_BTC') histories['BTC_USDT'] = trades;
+        if (pairCode === 'USDT_BTC') {
+          const _trades = trades.map(trade => invertTrade(trade));
+          histories['BTC_USDT'] = _trades;
+        }
       });
       resolve(histories);
     })
@@ -93,6 +96,9 @@ export const getOpenOrders = (authentication) => {
           return order;
         });
         openOrders[pairCode] = orders;
+        if (pairCode === 'USDT_BTC') {
+          openOrders['BTC_USDT'] = orders.map(order => invertOrder(order));
+        }
       });
       resolve(openOrders);
     })
@@ -137,15 +143,40 @@ export const invertTicker = (ticker) => {
     last: 1/last,
     lowestAsk: 1/lowestAsk,
     highestBid: 1/highestBid,
-    percentChange,
+    percentChange: -percentChange,
     baseVolume,
     quoteVolume
   };
   return _ticker;
 };
 
+export const invertTrade = trade => {
+  let _trade = JSON.parse(JSON.stringify(trade));
+  _trade.type = trade.type === 'sell' ? 'buy' : 'sell';
+  _trade.rate = 1/trade.rate;
+  _trade.amount = trade.total;
+  _trade.total = trade.amount;
+  return _trade;
+};
+
+export const invertOrder = order => {
+  let _order = JSON.parse(JSON.stringify(order));
+  if (order.currencyPair) {
+    const pairCodeArray = order.currencyPair.split('_');
+    _order.currencyPair = `${pairCodeArray[1]}_${pairCodeArray[0]}`;
+  }
+  _order.type = (order.type === 'sell') ? 'buy' : 'sell';
+  _order.rate = 1/order.rate;
+  _order.total = order.amount;
+  _order.amount = order.total;
+  return _order;
+};
+
 export const placeOrder = (authentication, order) => {
   return new Promise( (resolve, reject) => {
+    if (order.currencyPair === 'BTC_USDT') {
+      order = invertOrder(order);
+    }
     let options = authentication;
     options.urls = urls;
     if (order.type === 'buy') {

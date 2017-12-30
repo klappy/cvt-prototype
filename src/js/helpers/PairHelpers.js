@@ -72,6 +72,7 @@ export const getOrder = (type, assetCode, currencyCode, rate, amount, targetYiel
     rate,
     amount,
     btcValue,
+    total: btcValue,
     targetYield,
     type
   };

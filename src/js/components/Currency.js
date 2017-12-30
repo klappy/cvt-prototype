@@ -4,6 +4,7 @@ import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Paper from 'material-ui/Paper';
 import Asset from './Asset';
+import Balance from './Balance';
 import * as AssetIcons from 'react-cryptocoins';
 // helpers
 import * as PairHelpers from '../helpers/PairHelpers';
@@ -18,19 +19,8 @@ const Currency = ({
   openOrders,
   actions
 }) => {
-  const assets = [];
-  const balance = <ListItem key="balance"
-    primaryText="Balance"
-    secondaryText={
-      <p>
-        <strong>Available</strong>: {balances[currencyCode].available}
-        <br/>
-        <strong> On Orders</strong>: {balances[currencyCode].onOrders}
-      </p>
-    }
-    secondaryTextLines={2}
-  />;
-  assets.push(balance);
+  const assets = [];  
+  assets.push(<Balance balance={balances[currencyCode]} />);
 
   let totalBTCValue = balances[currencyCode].btcValue;
 
