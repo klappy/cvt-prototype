@@ -7,13 +7,14 @@ const Balance = ({
   balance,
   ...otherProps
 }) => {
+  const primaryText = `Balance: Ƀ${balance.btcValue.toFixed(8)} | $${balance.usdtValue ? balance.usdtValue.toFixed(2): 0}`;
   return (
     <ListItem
       {...otherProps}
-      primaryText="Balance"
+      primaryText={primaryText}
       secondaryText={
         <p>
-          <strong>Available</strong>: {balance.available.toFixed(2)}
+          <strong>Available</strong>: {balance.available.toFixed(8)}
           <br/>
           <strong> Orders</strong>: {balance.onOrders.toFixed(8)}
         </p>

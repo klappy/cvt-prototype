@@ -19,7 +19,7 @@ const Currency = ({
   openOrders,
   actions
 }) => {
-  const assets = [];  
+  const assets = [];
   assets.push(<Balance balance={balances[currencyCode]} />);
 
   let totalBTCValue = balances[currencyCode].btcValue;
@@ -94,9 +94,9 @@ const Currency = ({
     }
     subheader = (
       <Subheader>
-      <strong>{currencyCode}/USD: </strong>
+      <strong>Total: </strong>
       {currencyUnicode}{totalBTCValue.toFixed(4)}<strong>/</strong>${(totalUSDValue) ? totalUSDValue.toFixed(2): ''},
-      <strong> USD/{currencyCode}: </strong>
+      <strong> USD/{currencyCode} Rate: </strong>
       ${usdtCurrencyPrice.toFixed(2)}
       </Subheader>
     );
