@@ -57,10 +57,12 @@ const Currency = ({
 
   assetObjects.forEach((asset) => {
     if (asset && asset.balance && asset.ticker) {
+      const portfolioPercentage = (asset.balance.btcValue / totalBTCValue * 100).toFixed(1);
       assets.push(
         <Asset
           key={asset.assetCode}
           {...asset}
+          portfolioPercentage={portfolioPercentage}
         />
       );
     }
@@ -105,12 +107,15 @@ const Currency = ({
   const iconCode = currencyCode[0].toUpperCase() + currencyCode.substring(1).toLowerCase();
   const AssetIcon = AssetIcons[iconCode];
 
+  const portfolioPercentage = (totalBTCValue > 0) ? (balances[currencyCode].btcValue / totalBTCValue * 100).toFixed(1) : 0;
+  const primaryText = `${currencyCode} - ${portfolioPercentage}%`;
+
   return (
     <Paper>
       <List>
         {subheader}
         <ListItem
-          primaryText={currencyCode}
+          primaryText={primaryText}
           leftAvatar={<AssetIcon size={40} />}
           initiallyOpen={true}
           primaryTogglesNestedList={true}

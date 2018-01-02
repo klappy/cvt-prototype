@@ -25,6 +25,7 @@ const Asset = ({
   ticker,
   tradeHistory,
   orders,
+  portfolioPercentage,
   actions
 }) => {
   const urgentOrder = PairHelpers.getUrgentOrder(assetCode, currencyCode, balance, ticker, tradeHistory, settings);
@@ -142,7 +143,7 @@ const Asset = ({
         leftAvatar={assetIcon}
         primaryText={
           <span>
-            {assetCode} - {lastTrade}
+            {assetCode} - {portfolioPercentage}% - {lastTrade}
             <LinearProgress size={22} thickness={2.5} mode="determinate" color={progressColor} value={urgentOrder.percentToTrade*100} />
           </span>
         }
@@ -174,7 +175,8 @@ Asset.propTypes = {
   ticker: PropTypes.object.isRequired,
   tradeHistory: PropTypes.array.isRequired,
   orders: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired
+  portfolioPercentage: PropTypes.number.isRequired,
+  actions: PropTypes.object.isRequired,
 };
 
 export default Asset;
