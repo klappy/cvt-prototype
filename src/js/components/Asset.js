@@ -65,14 +65,15 @@ const Asset = ({
 
   let assetIconCode;
   switch (assetCode) {
-    case 'SC': {
+    case 'SC':
       assetIconCode = 'Sia';
       break;
-    }
-    case 'NAV': {
+    case 'NAV':
       assetIconCode = 'Nvc';
       break;
-    }
+    case 'PASC':
+      assetIconCode = 'Pivx';
+      break;
     default:
       assetIconCode = assetCode[0].toUpperCase() + assetCode.substring(1).replace(/\d+$/, "").toLowerCase();
   }
