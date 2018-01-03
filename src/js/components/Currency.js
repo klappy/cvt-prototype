@@ -11,6 +11,7 @@ import * as PairHelpers from '../helpers/PairHelpers';
 
 const Currency = ({
   currencyCode,
+  applicationSettings,
   assetCodes,
   assetSettings,
   balances,
@@ -62,6 +63,7 @@ const Currency = ({
         <Asset
           key={asset.assetCode}
           {...asset}
+          minimumYield={applicationSettings.minimumYield}
           portfolioPercentage={portfolioPercentage}
         />
       );
@@ -108,7 +110,7 @@ const Currency = ({
   const AssetIcon = AssetIcons[iconCode];
 
   const portfolioPercentage = (totalBTCValue > 0) ? (balances[currencyCode].btcValue / totalBTCValue * 100).toFixed(1) : 0;
-  const primaryText = `${currencyCode} - ${portfolioPercentage}%`;
+  const primaryText = `${currencyCode} (${portfolioPercentage}%)`;
 
   return (
     <Paper>
@@ -128,6 +130,7 @@ const Currency = ({
 
 Currency.propTypes = {
   currencyCode: PropTypes.string.isRequired,
+  applicationSettings: PropTypes.object.isRequired,
   assetCodes: PropTypes.array.isRequired,
   assetSettings: PropTypes.object.isRequired,
   balances: PropTypes.object.isRequired,

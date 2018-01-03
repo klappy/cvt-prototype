@@ -30,6 +30,10 @@ export const updateAuthentication = (key, secret) => (
   { type: types.UPDATE_AUTHENTICATION, key, secret }
 );
 
+export const updateApplicationSettings = (minimumYield) => (
+  { type: types.UPDATE_APPLICATION_SETTINGS, minimumYield }
+);
+
 export const updateBalances = () => {
   return ((dispatch, getState) => {
     const state = getState();

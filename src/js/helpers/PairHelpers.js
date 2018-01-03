@@ -4,38 +4,38 @@ export const getPair = (assetCode, currencyCode) => {
   return currencyCode + '_' + assetCode;
 };
 
-export const getTargetBuyOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, settings) => {
+export const getTargetBuyOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, target, minimumYield) => {
   const type = 'buy';
   const assetBalance = balance.available + balance.onOrders;
-  const targetYield = OrderHelpers.targetYield(settings.minimumYield, type, tradeHistory, settings.target);
-  const rate = getTargetBuyRate(settings.target, assetBalance, targetYield);
-  const amount = getTargetBuyAmount(settings.target, assetBalance, targetYield);
+  const targetYield = OrderHelpers.targetYield(minimumYield, type, tradeHistory, target);
+  const rate = getTargetBuyRate(target, assetBalance, targetYield);
+  const amount = getTargetBuyAmount(target, assetBalance, targetYield);
   const order = getOrder(type, assetCode, currencyCode, rate, amount, targetYield);
   return order;
 };
 
-export const getTargetSellOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, settings) => {
+export const getTargetSellOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, target, minimumYield) => {
   const type = 'sell';
   const assetBalance = balance.available + balance.onOrders;
-  const targetYield = OrderHelpers.targetYield(settings.minimumYield, type, tradeHistory, settings.target);
-  const rate = getTargetSellRate(settings.target, assetBalance, targetYield);
-  const amount = getTargetSellAmount(settings.target, assetBalance, targetYield);
+  const targetYield = OrderHelpers.targetYield(minimumYield, type, tradeHistory, target);
+  const rate = getTargetSellRate(target, assetBalance, targetYield);
+  const amount = getTargetSellAmount(target, assetBalance, targetYield);
   const order = getOrder(type, assetCode, currencyCode, rate, amount, targetYield);
   return order;
 };
 
-export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, settings) => {
-  const urgentBuyOrder = getUrgentBuyOrder(assetCode, currencyCode, balance, ticker, settings);
-  const urgentSellOrder = getUrgentSellOrder(assetCode, currencyCode, balance, ticker, settings);
-  const targetBuyOrder = getTargetBuyOrder(assetCode, currencyCode, balance, ticker, tradeHistory, settings);
-  const targetSellOrder = getTargetSellOrder(assetCode, currencyCode, balance, ticker, tradeHistory, settings);
-  const targetDelta = Math.abs(balance.btcValue - settings.target);
+export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, target, minimumYield) => {
+  const urgentBuyOrder = getUrgentBuyOrder(assetCode, currencyCode, balance, ticker, target, minimumYield);
+  const urgentSellOrder = getUrgentSellOrder(assetCode, currencyCode, balance, ticker, target, minimumYield);
+  const targetBuyOrder = getTargetBuyOrder(assetCode, currencyCode, balance, ticker, tradeHistory, target, minimumYield);
+  const targetSellOrder = getTargetSellOrder(assetCode, currencyCode, balance, ticker, tradeHistory, target, minimumYield);
+  const targetDelta = Math.abs(balance.btcValue - target);
   const holdAmount = targetDelta/ticker.last;
   var highestOrder = [urgentBuyOrder, urgentSellOrder].reduce(function(a, b) {
     return a.btcValue > b.btcValue ? a : b;
   });
   let order = getOrder('hold', assetCode, currencyCode, ticker.last, holdAmount);
-  if (highestOrder.btcValue > 0.0001 && highestOrder.targetYield >= settings.minimumYield) order = highestOrder;
+  if (highestOrder.btcValue > 0.0001 && highestOrder.targetYield >= minimumYield) order = highestOrder;
   const denominator = [targetBuyOrder, targetSellOrder].filter(_order => {
     return _order.type === highestOrder.type;
   })[0].btcValue;
@@ -47,20 +47,20 @@ export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, tradeHi
   return order;
 };
 
-export const getUrgentBuyOrder = (assetCode, currencyCode, balance, ticker, settings) => {
+export const getUrgentBuyOrder = (assetCode, currencyCode, balance, ticker, target) => {
   const rate = ticker.lowestAsk;
-  let amount = getUrgentOrderAmount(settings.target, balance.btcValue, rate);
+  let amount = getUrgentOrderAmount(target, balance.btcValue, rate);
   amount = (amount < 0) ? Math.abs(amount) : 0;
-  const currentYield = amount*rate/settings.target*100;
+  const currentYield = amount*rate/target*100;
   const order = getOrder('buy', assetCode, currencyCode, rate, amount, currentYield);
   return order;
 };
 
-export const getUrgentSellOrder = (assetCode, currencyCode, balance, ticker, settings) => {
+export const getUrgentSellOrder = (assetCode, currencyCode, balance, ticker, target) => {
   const rate = ticker.highestBid;
-  let amount = getUrgentOrderAmount(settings.target, balance.btcValue, rate);
+  let amount = getUrgentOrderAmount(target, balance.btcValue, rate);
   amount = (amount > 0) ? amount : 0;
-  const currentYield = amount*rate/settings.target*100;
+  const currentYield = amount*rate/target*100;
   const order = getOrder('sell', assetCode, currencyCode, rate, amount, currentYield);
   return order;
 };

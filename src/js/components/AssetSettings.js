@@ -9,8 +9,7 @@ import Settings from 'material-ui/svg-icons/action/settings';
 export default class AssetSettings extends React.Component {
   state = {
     open: false,
-    target: this.props.settings.target,
-    secret: this.props.settings.minimumYield
+    target: this.props.settings.target
   };
 
   handleOpen = () => {
@@ -29,11 +28,6 @@ export default class AssetSettings extends React.Component {
   updateTarget = (event) => {
     const target = event.target.value;
     this.setState({target});
-  };
-
-  updateMinimumYield = (event) => {
-    const minimumYield = event.target.value;
-    this.setState({minimumYield});
   };
 
   render() {
@@ -76,13 +70,6 @@ export default class AssetSettings extends React.Component {
             floatingLabelText="Target"
             defaultValue={this.props.settings.target}
             onBlur={this.updateTarget}
-          />
-          <TextField
-            style={{width: '100%'}}
-            hintText="Set the Minimum Yield for round each trade."
-            floatingLabelText="Minimum Yield"
-            defaultValue={this.props.settings.minimumYield}
-            onBlur={this.updateMinimumYield}
           />
         </Dialog>
       </div>

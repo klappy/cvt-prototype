@@ -19,6 +19,7 @@ import * as PairHelpers from '../helpers/PairHelpers';
 
 const Asset = ({
   assetCode,
+  minimumYield,
   currencyCode,
   settings,
   balance,
@@ -28,7 +29,7 @@ const Asset = ({
   portfolioPercentage,
   actions
 }) => {
-  const urgentOrder = PairHelpers.getUrgentOrder(assetCode, currencyCode, balance, ticker, tradeHistory, settings);
+  const urgentOrder = PairHelpers.getUrgentOrder(assetCode, currencyCode, balance, ticker, tradeHistory, settings.target, minimumYield);
 
   let orderRecommendationStyle = {};
   if (urgentOrder.type === 'sell') orderRecommendationStyle.color = 'rgb(0, 188, 212)';
@@ -37,6 +38,7 @@ const Asset = ({
   const nestedItems = [
     <PlaceOrders key="placeOrders"
       assetCode={assetCode}
+      minimumYield={minimumYield}
       currencyCode={currencyCode}
       balance={balance}
       ticker={ticker}
@@ -143,7 +145,7 @@ const Asset = ({
         leftAvatar={assetIcon}
         primaryText={
           <span>
-            {assetCode} - {portfolioPercentage}% - {lastTrade}
+            {assetCode} ({portfolioPercentage}%) {lastTrade}
             <LinearProgress size={22} thickness={2.5} mode="determinate" color={progressColor} value={urgentOrder.percentToTrade*100} />
           </span>
         }
@@ -169,6 +171,7 @@ const Asset = ({
 
 Asset.propTypes = {
   assetCode: PropTypes.string.isRequired,
+  minimumYield: PropTypes.number.isRequired,
   currencyCode: PropTypes.string.isRequired,
   balance: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,

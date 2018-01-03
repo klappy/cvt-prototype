@@ -13,8 +13,8 @@ const store = createStore(reducer, persistedState, compose(applyMiddleware(thunk
 
 store.subscribe(()=>{
   const state = store.getState();
-  const {authentication, assetSettings, messages} = state;
-  const reduxState = {authentication, assetSettings, messages};
+  const {authentication, assetSettings, applicationSettings} = state;
+  const reduxState = {authentication, assetSettings, applicationSettings};
   localStorage.setItem('reduxState', JSON.stringify(reduxState));
 });
 

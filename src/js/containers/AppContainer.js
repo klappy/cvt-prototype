@@ -8,7 +8,7 @@ import AppBar from 'material-ui/AppBar';
 import ReactInterval from 'react-interval';
 import Authentication from '../components/Authentication';
 import Currency from '../components/Currency';
-import Messages from '../components/Messages';
+import ApplicationSettings from '../components/ApplicationSettings';
 // actions
 import * as Actions from '../actions';
 
@@ -34,8 +34,8 @@ class AppContainer extends React.Component {
     const authenticationButton = (
       <Authentication actions={this.props.actions} authentication={this.props.authentication} />
     );
-    const messagesButton = (
-      <Messages actions={this.props.actions} messages={this.props.messages} />
+    const applicationSettingsButton = (
+      <ApplicationSettings actions={this.props.actions} applicationSettings={this.props.applicationSettings} />
     );
 
     let {balances, tickers} = this.props;
@@ -44,7 +44,7 @@ class AppContainer extends React.Component {
     Object.keys(tickers).forEach(pairCode => {
       const currencyCode = pairCode.split('_')[0];
       const assetCode = pairCode.split('_')[1];
-      if (balances[currencyCode]) {
+      if (currencyCode === 'BTC' && balances[currencyCode]) {
         if (!assetsOfCurrencies[currencyCode]) assetsOfCurrencies[currencyCode] = [];
         if (balances[assetCode] && balances[assetCode].available > 0) assetsOfCurrencies[currencyCode].push(assetCode);
       }
@@ -55,6 +55,7 @@ class AppContainer extends React.Component {
       const assetCodes = assetsOfCurrencies[currencyCode];
       currencies.push(<Currency key={currencyCode}
         currencyCode={currencyCode}
+        applicationSettings={this.props.applicationSettings}
         assetCodes={assetCodes}
         actions={this.props.actions}
         authentication={this.props.authentication}
@@ -70,9 +71,9 @@ class AppContainer extends React.Component {
       <MuiThemeProvider>
         <div>
           <AppBar
-            title="Constant Value Target Trading"
-            iconElementRight={messagesButton}
+            title="Dynamic Asset Yield Trader"
             iconElementLeft={authenticationButton}
+            iconElementRight={applicationSettingsButton}
           />
           {currencies}
           <ReactInterval timeout={6000} enabled={true} callback={() => { this.updateBalancesAndTickers() }} />
@@ -87,7 +88,7 @@ AppContainer.propTypes = {
   assetSettings: PropTypes.object.isRequired,
   authentication: PropTypes.object.isRequired,
   balances: PropTypes.object.isRequired,
-  messages: PropTypes.array.isRequired,
+  applicationSettings: PropTypes.object.isRequired,
   tickers: PropTypes.object.isRequired,
   tradeHistories: PropTypes.object.isRequired,
   openOrders: PropTypes.object.isRequired,
@@ -98,7 +99,7 @@ const mapStateToProps = state => ({
   assetSettings: state.assetSettings,
   authentication: state.authentication,
   balances: state.balances,
-  messages: state.messages,
+  applicationSettings: state.applicationSettings,
   tickers: state.tickers,
   tradeHistories: state.tradeHistories,
   openOrders: state.openOrders
