@@ -51,8 +51,10 @@ const Currency = ({
   .slice().sort((a,b) => {
     if (a.tradeHistory[0] && b.tradeHistory[0]) {
       return b.tradeHistory[0].date < a.tradeHistory[0].date ? -1 : 1;
-    } else {
-      return 0;
+    } else if (b.tradeHistory[0] && !a.tradeHistory[0]) {
+      return 1;
+    } else if (!b.tradeHistory[0] && a.tradeHistory[0]) {
+      return -1;
     }
   });
 
