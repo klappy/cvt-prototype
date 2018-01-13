@@ -8,18 +8,11 @@
  */
 export const targetYield = (minimumYield, type, tradeHistory) => {
   let targetYield;
+  // consecutive helps handle increasing yield for really good or bad run
   const consecutiveYield = lastConsecutiveRateChange(tradeHistory, type);
   const averageYield = typeConsecutiveAverageRateChange(tradeHistory, type);
-  if (consecutiveYield === 0) { // if this is the first trade in theis direction
-    targetYield = averageYield/2;
-  } else if (averageYield > consecutiveYield) {
-    targetYield = averageYield - (consecutiveYield/2);
-  } else { // consecutive is greatest, use that in case of flash crash or sky rocket
-    targetYield = consecutiveYield/2;
-  }
+  targetYield = Math.max(averageYield, consecutiveYield/2, minimumYield);
   targetYield = parseFloat(targetYield.toFixed(2));
-  targetYield = Math.max(targetYield, minimumYield);
-// console.log(consecutiveBtc, consecutiveYield, averageBtcValue, averageYield, targetYield)
   return targetYield;
 };
 /**
@@ -30,11 +23,10 @@ export const lastConsecutiveRateChange = (tradeHistory, type) => {
   let rates = [];
   let consecutive = true;
   tradeHistory.forEach(trade => {
-    if (trade.type !== type) {
-      consecutive = false;
-    } else {
-      if (consecutive) rates.push(trade.rate);
-    }
+    // add the next one even if just switched other direction for delta
+    if (consecutive) rates.push(trade.rate);
+    // switch consecutive to false so after this one it won't push rate
+    if (trade.type !== type) consecutive = false;
   });
   if (rates.length > 0) {
     const rateDelta = Math.abs(rates[0] - rates[rates.length-1]);
@@ -50,13 +42,13 @@ export const typeConsecutiveAverageRateChange = (tradeHistory, type) => {
   let consecutiveRuns = [];
   let consecutiveRates = [];
   tradeHistory.forEach((trade) => {
-    let push = false;
-    if (trade.type === type) {
-      consecutiveRates.push(trade.rate);
-    } else {
-      push = true;
+    let reset = false;
+    // always add to the consecutive, if switched directions, it gives baseline rate
+    consecutiveRates.push(trade.rate);
+    if (trade.type !== type) {
+      reset = true;
     }
-    if (push) {
+    if (reset) {
       consecutiveRuns.push(consecutiveRates);
       consecutiveRates = [];
     }
