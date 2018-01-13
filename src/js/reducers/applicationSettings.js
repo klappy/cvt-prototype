@@ -8,7 +8,7 @@ export default function update(state = initialState, action) {
   switch (action.type) {
     case UPDATE_APPLICATION_SETTINGS:
       return {
-        minimumYield: action.minimumYield
+        minimumYield: parseFloat(action.minimumYield)
       };
 
     default:

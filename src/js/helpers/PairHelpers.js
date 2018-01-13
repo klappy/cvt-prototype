@@ -39,7 +39,7 @@ export const getUrgentOrder = (assetCode, currencyCode, balance, ticker, tradeHi
   const denominator = [targetBuyOrder, targetSellOrder].filter(_order => {
     return _order.type === highestOrder.type;
   })[0].btcValue;
-  const percentToTrade = targetDelta/denominator;
+  const percentToTrade = denominator ? targetDelta/denominator : 0;
   order.percentToTrade = percentToTrade;
   [targetBuyOrder, targetSellOrder].forEach(_order => {
     if (_order.type === highestOrder.type) order.targetYield = _order.targetYield;

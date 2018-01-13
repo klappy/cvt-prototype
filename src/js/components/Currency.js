@@ -21,7 +21,7 @@ const Currency = ({
   actions
 }) => {
   const assets = [];
-  assets.push(<Balance balance={balances[currencyCode]} />);
+  assets.push(<Balance key="balance" balance={balances[currencyCode]} />);
 
   let totalBTCValue = balances[currencyCode].btcValue;
 
@@ -61,7 +61,7 @@ const Currency = ({
 
   assetObjects.forEach((asset) => {
     if (asset && asset.balance && asset.ticker) {
-      const portfolioPercentage = (asset.balance.btcValue / totalBTCValue * 100).toFixed(1);
+      const portfolioPercentage = parseFloat((asset.balance.btcValue / totalBTCValue * 100).toFixed(1));
       assets.push(
         <Asset
           key={asset.assetCode}

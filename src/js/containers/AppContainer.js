@@ -14,14 +14,6 @@ import * as Actions from '../actions';
 
 class AppContainer extends React.Component {
 
-  componentDidMount() {
-    this.updateAllReducers();
-  }
-
-  updateAllReducers() {
-    this.props.actions.updateAll();
-  }
-
   updateOrdersAndTrades() {
     this.props.actions.updateOrdersAndTrades();
   }
@@ -76,8 +68,8 @@ class AppContainer extends React.Component {
             iconElementRight={applicationSettingsButton}
           />
           {currencies}
-          <ReactInterval timeout={6000} enabled={true} callback={() => { this.updateBalancesAndTickers() }} />
-          <ReactInterval timeout={9000} enabled={true} callback={() => { this.updateOrdersAndTrades() }} />
+          <ReactInterval timeout={5000} enabled={true} callback={() => { this.updateBalancesAndTickers() }} />
+          <ReactInterval timeout={7000} enabled={true} callback={() => { this.updateOrdersAndTrades() }} />
         </div>
       </MuiThemeProvider>
     );
