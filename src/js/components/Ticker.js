@@ -7,11 +7,11 @@ const Ticker = ({
   ticker,
   ...otherProps
 }) => {
-
+  const primaryText = ticker.lastUSD ? "Ticker: $" + ticker.lastUSD : "Ticker";
   return (
     <ListItem
       {...otherProps}
-      primaryText="Ticker"
+      primaryText={primaryText}
       secondaryText={
         <p>
           <strong>Last</strong>: {ticker.last.toFixed(8)},

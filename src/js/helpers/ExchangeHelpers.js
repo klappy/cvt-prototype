@@ -118,12 +118,21 @@ export const getTicker = (authentication) => {
     options.urls = urls;
     plnx.returnTicker(options)
     .then(_tickers => {
-      Object.keys(_tickers).forEach(pairCode => {
-        tickers[pairCode] = parseFloatObject(_tickers[pairCode]);
-      });
-      const usdtBtcTicker = _tickers['USDT_BTC'];
+      const usdtBtcTicker = parseFloatObject(_tickers['USDT_BTC']);
       const btcUsdtTicker = invertTicker(usdtBtcTicker);
       tickers['BTC_USDT'] = btcUsdtTicker;
+      Object.keys(_tickers).forEach(pairCode => {
+        let ticker = parseFloatObject(_tickers[pairCode]);
+        let usdtPair = 'USDT' + pairCode.split('_')[1];
+        let usdtTicker = _tickers[usdtPair];
+        if (usdtTicker) {
+          ticker.lastUSD = usdtTicker.last;
+        } else {
+          ticker.lastUSD = parseFloat((ticker.last * usdtBtcTicker.last).toFixed(2));
+        }
+        tickers[pairCode] = ticker;
+      });
+      console.log(tickers)
       resolve(tickers);
     })
     .catch(error => {
