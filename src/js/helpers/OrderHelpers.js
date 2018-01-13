@@ -6,12 +6,10 @@
  * number of hours since last trade
  * dont let go too low, minimum trade size
  */
-export const targetYield = (minimumYield, type, tradeHistory, assetTargetBtcValue) => {
+export const targetYield = (minimumYield, type, tradeHistory) => {
   let targetYield;
-  const consecutiveBtc = lastConsecutiveBtc(tradeHistory, type);
-  const consecutiveYield = consecutiveBtc/assetTargetBtcValue*100;
-  const averageBtcValue = typeConsecutiveAverageBtc(tradeHistory, type);
-  const averageYield = averageBtcValue/assetTargetBtcValue*100;
+  const consecutiveYield = lastConsecutiveRateChange(tradeHistory, type);
+  const averageYield = typeConsecutiveAverageRateChange(tradeHistory, type);
   if (consecutiveYield === 0) { // if this is the first trade in theis direction
     targetYield = averageYield/2;
   } else if (averageYield > consecutiveYield) {
@@ -24,47 +22,59 @@ export const targetYield = (minimumYield, type, tradeHistory, assetTargetBtcValu
 // console.log(consecutiveBtc, consecutiveYield, averageBtcValue, averageYield, targetYield)
   return targetYield;
 };
- /**
-  * Description - gets number of recent consecutive trades of type
-  */
-export const lastConsecutiveBtc = (tradeHistory, type) => {
-  let btc = 0;
+/**
+ * Description - gets rate change of recent consecutive trades of type
+ */
+export const lastConsecutiveRateChange = (tradeHistory, type) => {
+  let rateChange = 0;
+  let rates = [];
   let consecutive = true;
   tradeHistory.forEach(trade => {
     if (trade.type !== type) {
       consecutive = false;
     } else {
-      if (consecutive) btc = btc + trade.total;
+      if (consecutive) rates.push(trade.rate);
     }
   });
-  return btc;
+  if (rates.length > 0) {
+    const rateDelta = Math.abs(rates[0] - rates[rates.length-1]);
+    rateChange = rateDelta/rates[rates.length-1];
+  }
+  return rateChange * 100;
 };
 /**
- * Description - gets average consecutive btcValue
+ * Description - gets average consecutive rate change
  * if type is buys: buys/sells and if sells: sells/buys
  */
-export const typeConsecutiveAverageBtc = (tradeHistory, type) => {
+export const typeConsecutiveAverageRateChange = (tradeHistory, type) => {
   let consecutiveRuns = [];
-  let consecutiveBTC = 0;
+  let consecutiveRates = [];
   tradeHistory.forEach((trade) => {
     let push = false;
     if (trade.type === type) {
-      consecutiveBTC = consecutiveBTC + trade.total;
+      consecutiveRates.push(trade.rate);
     } else {
       push = true;
     }
-    // if (index === tradeHistory.length-1) push = true; // don't include this in case first trade was buy-in
     if (push) {
-      consecutiveRuns.push(consecutiveBTC);
-      consecutiveBTC = 0;
+      consecutiveRuns.push(consecutiveRates);
+      consecutiveRates = [];
     }
   });
-  consecutiveRuns = consecutiveRuns.filter(int => int > 0);
+  consecutiveRuns = consecutiveRuns.filter(array => array.length > 0);
   let average = 0;
   if (consecutiveRuns.length > 0) {
-    average = consecutiveRuns.reduce((p,c) => p + c, 0) / consecutiveRuns.length;
+    const consecutiveChanges = consecutiveRuns.map(rates => {
+      let rateChange = 0;
+      if (rates.length > 0) {
+        const rateDelta = Math.abs(rates[0] - rates[rates.length-1]);
+        rateChange = rateDelta/rates[rates.length-1];
+      }
+      return rateChange;
+    });
+    average = consecutiveChanges.reduce((p,c) => p + c, 0) / consecutiveChanges.length;
   }
-  return average;
+  return average * 100;
 };
 
 export const typeFilter = (orders, type) => orders.filter(o => o.type === type);

@@ -7,7 +7,7 @@ export const getPair = (assetCode, currencyCode) => {
 export const getTargetBuyOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, target, minimumYield) => {
   const type = 'buy';
   const assetBalance = balance.available + balance.onOrders;
-  const targetYield = OrderHelpers.targetYield(minimumYield, type, tradeHistory, target);
+  const targetYield = OrderHelpers.targetYield(minimumYield, type, tradeHistory);
   const rate = getTargetBuyRate(target, assetBalance, targetYield);
   const amount = getTargetBuyAmount(target, assetBalance, targetYield);
   const order = getOrder(type, assetCode, currencyCode, rate, amount, targetYield);
@@ -17,7 +17,7 @@ export const getTargetBuyOrder = (assetCode, currencyCode, balance, ticker, trad
 export const getTargetSellOrder = (assetCode, currencyCode, balance, ticker, tradeHistory, target, minimumYield) => {
   const type = 'sell';
   const assetBalance = balance.available + balance.onOrders;
-  const targetYield = OrderHelpers.targetYield(minimumYield, type, tradeHistory, target);
+  const targetYield = OrderHelpers.targetYield(minimumYield, type, tradeHistory);
   const rate = getTargetSellRate(target, assetBalance, targetYield);
   const amount = getTargetSellAmount(target, assetBalance, targetYield);
   const order = getOrder(type, assetCode, currencyCode, rate, amount, targetYield);
@@ -95,14 +95,16 @@ export const getTargetRate = (targetValue, assetBalance) => {
 };
 
 export const getTargetBuyAmount = (targetValue, assetBalance, targetYield) => {
-  const btcAmount = targetValue * targetYield/100;
+  const minimumBtcAmount = 0.00010001;
+  const btcAmount = Math.max(minimumBtcAmount, targetValue * targetYield/100);
   const rate = getTargetBuyRate(targetValue, assetBalance, targetYield);
   const amount = btcAmount / rate;
   return amount;
 };
 
 export const getTargetSellAmount = (targetValue, assetBalance, targetYield) => {
-  const btcAmount = targetValue * targetYield/100;
+  const minimumBtcAmount = 0.00010001;
+  const btcAmount = Math.max(minimumBtcAmount, targetValue * targetYield/100);
   const rate = getTargetSellRate(targetValue, assetBalance, targetYield);
   const amount = btcAmount / rate;
   return amount;

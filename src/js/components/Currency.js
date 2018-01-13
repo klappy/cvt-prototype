@@ -56,6 +56,7 @@ const Currency = ({
     } else if (!b.tradeHistory[0] && a.tradeHistory[0]) {
       return -1;
     }
+    return 0;
   });
 
   assetObjects.forEach((asset) => {
