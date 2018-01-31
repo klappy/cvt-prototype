@@ -43,7 +43,7 @@
     "moment": "^2.19.4",
     "plnx": "klappy/plnx",
     "react": "^16.1.1",
-    "react-cryptocoins": "^1.0.10",
+    "react-cryptocoins": "^1.0.11",
     "react-dom": "^16.1.1",
     "react-interval": "^2.0.2",
     "react-redux": "^5.0.6",
