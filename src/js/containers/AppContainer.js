@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // components
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
 import ReactInterval from 'react-interval';
 import Authentication from '../components/Authentication';
@@ -60,10 +62,10 @@ class AppContainer extends React.Component {
     });
 
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
         <div>
           <AppBar
-            title="Dynamic Asset Yield Trader"
+            title="Proactive Response Trader"
             iconElementLeft={authenticationButton}
             iconElementRight={applicationSettingsButton}
           />

@@ -78,7 +78,7 @@ const Asset = ({
       assetIconCode = assetCode[0].toUpperCase() + assetCode.substring(1).replace(/\d+$/, "").toLowerCase();
   }
   let AssetIcon = AssetIcons[assetIconCode];
-  const assetIconColor = orderRecommendationStyle.color ? orderRecommendationStyle.color : 'rgb(117, 117, 117)';
+  const assetIconColor = orderRecommendationStyle.color ? orderRecommendationStyle.color : 'rgba(255, 255, 255, 0.7)';
   const assetIcon = (
     <Badge
       badgeContent={historySellCount}
