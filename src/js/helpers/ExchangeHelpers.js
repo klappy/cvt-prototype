@@ -49,7 +49,7 @@ export const getTradeHistories = (authentication) => {
     let options = authentication;
     options.urls = urls;
     options.currencyPair = 'all';
-    const startTimestamp = moment().subtract(1, 'months').unix();
+    const startTimestamp = moment().subtract(1, 'years').unix();
     options.start = startTimestamp;
     plnx.returnTradeHistory(options)
     .then(_histories => {
